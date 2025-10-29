@@ -1,12 +1,12 @@
 # freertos_for_tests
 
-The goal is to have a project ready to be integrated with tests using Posix.
+The goal of this repository is to provide FreeRTOS demos running on POSIX, which can be easily integrated into CI/CD pipelines.
 
----
+## Demos
 
-# Demos
+Available demos include:
 
-## blink
-
-Typical blinking example.
-
+1. **blink:** Typical blinking example.
+2. **gtest/basic:** Just a test to make sure the task is valid.
+3. **gtest/task_called:** We will try to run a task and make sure it was called.
+4. **gtest/leak_detector:** This test demonstrates how to run a minimal task that performs a simple operation, while using `LeakDetector` to check for memory leaks.
