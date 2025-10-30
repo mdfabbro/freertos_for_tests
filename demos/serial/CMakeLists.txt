@@ -1,7 +1,8 @@
 cmake_minimum_required(VERSION 3.15)
 
-project(demo_blink LANGUAGES C CXX)
+project(demo_serial LANGUAGES C CXX)
 
+# C++17
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_BUILD_TYPE Release)
@@ -26,7 +27,6 @@ target_compile_definitions(freertos_config INTERFACE
     projENABLE_TRACING=0
     projCOVERAGE_TEST=0
 )
-
 target_include_directories(freertos_config INTERFACE
     ${CMAKE_SOURCE_DIR}/src/FreeRTOS
     ${FREERTOS_DIR}/Source/include
@@ -40,6 +40,7 @@ target_compile_options(freertos_kernel PRIVATE -Wno-pointer-to-int-cast)
 include_directories(
     ${CMAKE_SOURCE_DIR}/src
     ${FREERTOS_CPP_DIR}/include
+    ${CMAKE_SOURCE_DIR}/../../utils
 )
 
 set(PROJECT_SRC
@@ -48,14 +49,20 @@ set(PROJECT_SRC
     src/tasks/Blink.cpp
 )
 
-add_executable(demo_blink ${PROJECT_SRC})
+set(SERIAL_SRC
+    ${CMAKE_SOURCE_DIR}/../../utils/Serial/BaseChannel.cpp
+    ${CMAKE_SOURCE_DIR}/../../utils/Serial/Client.cpp
+    ${CMAKE_SOURCE_DIR}/../../utils/Serial/ChannelHandle.cpp
+)
 
-target_compile_definitions(demo_blink PUBLIC
+add_executable(demo_serial ${PROJECT_SRC} ${SERIAL_SRC})
+
+target_compile_definitions(demo_serial PUBLIC
     projENABLE_TRACING=0
     projCOVERAGE_TEST=0
 )
 
-target_link_libraries(demo_blink
+target_link_libraries(demo_serial
     pthread
     freertos_kernel
     freertos_config
