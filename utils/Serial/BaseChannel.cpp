@@ -15,12 +15,14 @@ BaseChannel::~BaseChannel() {
         ::close(masterFd);
 }
 
-ssize_t BaseChannel::transmit(const void* data, size_t size) {
-    return ::write(masterFd, data, size);
+size_t BaseChannel::transmit(const void* data, size_t size) {
+    const auto res = ::write(masterFd, data, size);
+    return (res <= 0) ? 0 : static_cast<size_t>(res);
 }
 
-ssize_t BaseChannel::receive(void* buffer, size_t size) {
-    return ::read(masterFd, buffer, size);
+size_t BaseChannel::receive(void* buffer, size_t size) {
+    const auto res = ::read(masterFd, buffer, size);
+    return (res <= 0) ? 0 : static_cast<size_t>(res);
 }
 
 }

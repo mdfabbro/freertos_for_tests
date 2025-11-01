@@ -14,6 +14,8 @@ set(FREERTOS_DIR "${CMAKE_SOURCE_DIR}/../../../FreeRTOS/FreeRTOS")
 set(FREERTOS_CPP_DIR "${CMAKE_SOURCE_DIR}/../../../FreeRTOS-Cpp/FreeRTOS-Cpp")
 set(FREERTOS_KERNEL_PATH "${FREERTOS_DIR}/Source")
 
+set(UTILS_DIR "${CMAKE_SOURCE_DIR}/../../../utils")
+
 message(STATUS "Using FREERTOS_DIR: ${FREERTOS_DIR}")
 message(STATUS "Using FREERTOS_CPP_DIR: ${FREERTOS_CPP_DIR}")
 
@@ -26,7 +28,7 @@ target_compile_definitions(freertos_config INTERFACE
     projCOVERAGE_TEST=0
 )
 target_include_directories(freertos_config INTERFACE
-    ${CMAKE_SOURCE_DIR}/src/FreeRTOS
+    ${UTILS_DIR}/FreeRTOS
     ${FREERTOS_DIR}/Source/include
     ${FREERTOS_DIR}/Demo/Common/include
 )
@@ -37,11 +39,11 @@ target_compile_options(freertos_kernel PRIVATE -Wno-pointer-to-int-cast)
 include_directories(
     ${CMAKE_SOURCE_DIR}/src
     ${FREERTOS_CPP_DIR}/include
-    ${CMAKE_SOURCE_DIR}/../../../utils
+    ${UTILS_DIR}
 )
 
 set(PROJECT_SRC
-    src/FreeRTOS/FreeRTOSHooks.cpp
+    ${UTILS_DIR}/FreeRTOS/FreeRTOSHooks.cpp
 )
 
 # GOOGLE TEST
@@ -54,12 +56,13 @@ FetchContent_Declare(
 
 set(gtest_force_shared_crt ON CACHE BOOL "" FORCE)
 FetchContent_MakeAvailable(googletest)
+
+include(CTest)
 enable_testing()
 
 set(LEAK_SRC
-    ${CMAKE_SOURCE_DIR}/../../../utils/LeakDetector/LeakDetector.cpp
+    ${UTILS_DIR}/LeakDetector/LeakDetector.cpp
 )
-
 
 set(TEST_SRC
     tests/integration.cpp

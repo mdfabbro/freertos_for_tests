@@ -15,6 +15,8 @@ set(FREERTOS_DIR "${CMAKE_SOURCE_DIR}/../../FreeRTOS/FreeRTOS")
 set(FREERTOS_CPP_DIR "${CMAKE_SOURCE_DIR}/../../FreeRTOS-Cpp/FreeRTOS-Cpp")
 set(FREERTOS_KERNEL_PATH "${FREERTOS_DIR}/Source")
 
+set(UTILS_DIR "${CMAKE_SOURCE_DIR}/../../utils")
+
 message(STATUS "Using FREERTOS_DIR: ${FREERTOS_DIR}")
 message(STATUS "Using FREERTOS_CPP_DIR: ${FREERTOS_CPP_DIR}")
 
@@ -28,7 +30,7 @@ target_compile_definitions(freertos_config INTERFACE
 )
 
 target_include_directories(freertos_config INTERFACE
-    ${CMAKE_SOURCE_DIR}/src/FreeRTOS
+    ${UTILS_DIR}/FreeRTOS
     ${FREERTOS_DIR}/Source/include
     ${FREERTOS_DIR}/Demo/Common/include
 )
@@ -40,11 +42,12 @@ target_compile_options(freertos_kernel PRIVATE -Wno-pointer-to-int-cast)
 include_directories(
     ${CMAKE_SOURCE_DIR}/src
     ${FREERTOS_CPP_DIR}/include
+    ${UTILS_DIR}
 )
 
 set(PROJECT_SRC
     src/main.cpp
-    src/FreeRTOS/FreeRTOSHooks.cpp
+    ${UTILS_DIR}/FreeRTOS/FreeRTOSHooks.cpp
     src/tasks/Blink.cpp
 )
 

@@ -34,3 +34,18 @@ Running main() from /home/gigames/temp/freertos/freertos_for_tests/demos/gtest/l
 [==========] 2 tests from 1 test suite ran. (20 ms total)
 [  PASSED  ] 2 tests.
 ```
+
+### With CTest
+
+From `build` directory, you can use `ctest --output-on-failure`, like this:
+
+```bash
+$  ctest --output-on-failure
+Test project /<some_path>/freertos_for_tests/demos/gtest/leak_detection/build
+    Start 1: demo_leak_detector
+1/1 Test #1: demo_leak_detector ...............   Passed    0.02 sec
+
+100% tests passed, 0 tests failed out of 1
+
+Total Test time (real) =   0.03 sec
+```

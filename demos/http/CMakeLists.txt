@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.15)
 
-project(demo_serial LANGUAGES C CXX)
+project(demo_http LANGUAGES C CXX)
 
 # C++17
 set(CMAKE_CXX_STANDARD 17)
@@ -48,8 +48,11 @@ include_directories(
 
 set(PROJECT_SRC
     src/main.cpp
+    src/tasks/Responder.cpp
     ${UTILS_DIR}/FreeRTOS/FreeRTOSHooks.cpp
-    src/tasks/Sample.cpp
+    ${UTILS_DIR}/Http/Server.cpp
+    ${UTILS_DIR}/Http/ServerClientSession.cpp
+    ${UTILS_DIR}/Http/Socket.cpp
 )
 
 set(SERIAL_SRC
@@ -58,14 +61,14 @@ set(SERIAL_SRC
     ${UTILS_DIR}/Serial/ChannelHandle.cpp
 )
 
-add_executable(demo_serial ${PROJECT_SRC} ${SERIAL_SRC})
+add_executable(demo_http ${PROJECT_SRC} ${SERIAL_SRC})
 
-target_compile_definitions(demo_serial PUBLIC
+target_compile_definitions(demo_http PUBLIC
     projENABLE_TRACING=0
     projCOVERAGE_TEST=0
 )
 
-target_link_libraries(demo_serial
+target_link_libraries(demo_http
     pthread
     freertos_kernel
     freertos_config

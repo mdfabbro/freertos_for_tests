@@ -14,6 +14,8 @@ set(FREERTOS_DIR "${CMAKE_SOURCE_DIR}/../../../FreeRTOS/FreeRTOS")
 set(FREERTOS_CPP_DIR "${CMAKE_SOURCE_DIR}/../../../FreeRTOS-Cpp/FreeRTOS-Cpp")
 set(FREERTOS_KERNEL_PATH "${FREERTOS_DIR}/Source")
 
+set(UTILS_DIR "${CMAKE_SOURCE_DIR}/../../../utils")
+
 message(STATUS "Using FREERTOS_DIR: ${FREERTOS_DIR}")
 message(STATUS "Using FREERTOS_CPP_DIR: ${FREERTOS_CPP_DIR}")
 
@@ -26,9 +28,10 @@ target_compile_definitions(freertos_config INTERFACE
     projCOVERAGE_TEST=0
 )
 target_include_directories(freertos_config INTERFACE
-    ${CMAKE_SOURCE_DIR}/src/FreeRTOS
+    ${UTILS_DIR}/FreeRTOS
     ${FREERTOS_DIR}/Source/include
     ${FREERTOS_DIR}/Demo/Common/include
+    ${UTILS_DIR}
 )
 
 add_subdirectory(${FREERTOS_KERNEL_PATH} ${CMAKE_CURRENT_BINARY_DIR}/FreeRTOS-Kernel)
@@ -40,7 +43,7 @@ include_directories(
 )
 
 set(PROJECT_SRC
-    src/FreeRTOS/FreeRTOSHooks.cpp
+    ${UTILS_DIR}/FreeRTOS/FreeRTOSHooks.cpp
     src/tasks/Blink.cpp
 )
 
@@ -54,6 +57,8 @@ FetchContent_Declare(
 
 set(gtest_force_shared_crt ON CACHE BOOL "" FORCE)
 FetchContent_MakeAvailable(googletest)
+
+include(CTest)
 enable_testing()
 
 set(TEST_SRC
@@ -81,3 +86,4 @@ message(STATUS "")
 message(STATUS "Targets configurados:")
 message(STATUS " - demo_tests:  Runs a basic example with google test")
 message(STATUS "")
+

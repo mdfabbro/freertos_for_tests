@@ -15,8 +15,8 @@ protected:
     ~BaseChannel() override ;
 
 public:
-    ssize_t transmit(const void* data, size_t size) override;
-    ssize_t receive(void* buffer, size_t size) override;
+    size_t transmit(const void* data, size_t size) override;
+    size_t receive(void* buffer, size_t size) override;
 };
 
 } 
