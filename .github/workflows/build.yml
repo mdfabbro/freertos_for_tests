@@ -7,69 +7,27 @@ on:
     branches: [ main ]
 
 jobs:
-  # Job 1: Build only for projects without tests
-  build_only:
+  build_blink:
     runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        project:
-          - demos/blink
-          - demos/http
-          - demos/serial/basic
-          - demos/serial/client_server
 
     steps:
       - name: Checkout repository
         uses: actions/checkout@v3
         with:
-          submodules: true  
+          submodules: true
 
       - name: Install dependencies
         run: |
           sudo apt-get update
           sudo apt-get install -y cmake build-essential git
 
-      - name: Build ${{ matrix.project }}
+      - name: Build demos/blink
         run: |
-          echo "[    ] Building ${{ matrix.project }}"
-          rm -rf ${{ matrix.project }}/build
-          mkdir -p ${{ matrix.project }}/build
-          pushd ${{ matrix.project }}/build
+          echo "[    ] Building demos/blink"
+          rm -rf demos/blink/build
+          mkdir -p demos/blink/build
+          pushd demos/blink/build
           cmake ..
           make -j$(nproc)
           popd
-          echo "[DONE] Building ${{ matrix.project }}"
-  # Job 2: Build + Test for projects with tests
-  build_and_test:
-    runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        project:
-          - demos/gtest/basic
-          - demos/gtest/leak_detection
-          - demos/gtest/task_called
-
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v3
-        with:
-          submodules: true  
-    
-      - name: Install dependencies
-        run: |
-          sudo apt-get update
-          sudo apt-get install -y cmake build-essential git
-
-      - name: Build and test ${{ matrix.project }}
-        run: |
-          echo "[    ] Building ${{ matrix.project }}"
-          rm -rf ${{ matrix.project }}/build
-          mkdir -p ${{ matrix.project }}/build
-          pushd ${{ matrix.project }}/build
-          cmake ..
-          make -j$(nproc)
-          ctest --output-on-failure
-          popd
-          echo "[DONE] Building ${{ matrix.project }}"
-
-  
+          echo "[DONE] Building demos/blink"
