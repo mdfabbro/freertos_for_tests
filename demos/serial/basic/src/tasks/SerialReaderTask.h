@@ -1,5 +1,5 @@
-#ifndef __SERIAL_SAMPLE_H__
-#define __SERIAL_SAMPLE_H__
+#ifndef __SERIAL_READER_TASK_H__
+#define __SERIAL_READER_TASK_H__
 
 #include <FreeRTOS/Task.hpp>
 
@@ -14,7 +14,4 @@ struct TaskData {
 // Task that continuously reads from the serial port
 void SerialReaderTask(void* arg);
 
-// Task that waits for a notification to stop the scheduler
-void StopSchedulerTask(void*);
-
-#endif // __SERIAL_SAMPLE_H__
+#endif // __SERIAL_READER_TASK_H__

@@ -1,4 +1,4 @@
-#include "Sample.h"
+#include "SerialReaderTask.h"
 
 // Task that continuously reads from the serial port
 void SerialReaderTask(void* arg) {
@@ -22,17 +22,5 @@ void SerialReaderTask(void* arg) {
 
         // Delay to yield CPU (100 ms)
         vTaskDelay(pdMS_TO_TICKS(100));
-    }
-}
-
-// Task that waits for a notification to stop the scheduler
-void StopSchedulerTask(void*) {
-    for (;;) {
-        // Wait indefinitely until notified
-        ulTaskNotifyTake(pdTRUE, portMAX_DELAY);
-        printf("Stopping scheduler!\n");
-
-        // Stop the FreeRTOS scheduler
-        FreeRTOS::Kernel::endScheduler();
     }
 }

@@ -12,11 +12,11 @@ add_compile_options(-Wall -Wextra -Wpedantic -D_WINDOWS_)
 set(CMAKE_C_FLAGS_RELEASE "-O3")
 set(CMAKE_C_FLAGS_DEBUG "-O0 -g3")
 
-set(FREERTOS_DIR "${CMAKE_SOURCE_DIR}/../../FreeRTOS/FreeRTOS")
-set(FREERTOS_CPP_DIR "${CMAKE_SOURCE_DIR}/../../FreeRTOS-Cpp/FreeRTOS-Cpp")
+set(FREERTOS_DIR "${CMAKE_SOURCE_DIR}/../../../FreeRTOS/FreeRTOS")
+set(FREERTOS_CPP_DIR "${CMAKE_SOURCE_DIR}/../../../FreeRTOS-Cpp/FreeRTOS-Cpp")
 set(FREERTOS_KERNEL_PATH "${FREERTOS_DIR}/Source")
 
-set(UTILS_DIR "${CMAKE_SOURCE_DIR}/../../utils")
+set(UTILS_DIR "${CMAKE_SOURCE_DIR}/../../../utils")
 
 message(STATUS "Using FREERTOS_DIR: ${FREERTOS_DIR}")
 message(STATUS "Using FREERTOS_CPP_DIR: ${FREERTOS_CPP_DIR}")
@@ -46,11 +46,16 @@ include_directories(
     ${UTILS_DIR}
 )
 
-set(PROJECT_SRC
-    src/main.cpp
+set(PROJECT_SERVER_SRC
+    src/server/main.cpp
     ${UTILS_DIR}/FreeRTOS/FreeRTOSHooks.cpp
-    src/tasks/Sample.cpp
 )
+
+set(PROJECT_CLIENT_SRC
+    src/client/main.cpp
+    ${UTILS_DIR}/FreeRTOS/FreeRTOSHooks.cpp
+)
+
 
 set(SERIAL_SRC
     ${UTILS_DIR}/Serial/BaseChannel.cpp
@@ -58,14 +63,25 @@ set(SERIAL_SRC
     ${UTILS_DIR}/Serial/ChannelHandle.cpp
 )
 
-add_executable(demo_serial ${PROJECT_SRC} ${SERIAL_SRC})
+add_executable(demo_serial_server ${PROJECT_SERVER_SRC} ${SERIAL_SRC})
+add_executable(demo_serial_client ${PROJECT_CLIENT_SRC} ${SERIAL_SRC})
 
-target_compile_definitions(demo_serial PUBLIC
+target_compile_definitions(demo_serial_server PUBLIC
+    projENABLE_TRACING=0
+    projCOVERAGE_TEST=0
+)
+target_link_libraries(demo_serial_server
+    pthread
+    freertos_kernel
+    freertos_config
+)
+
+target_compile_definitions(demo_serial_client PUBLIC
     projENABLE_TRACING=0
     projCOVERAGE_TEST=0
 )
 
-target_link_libraries(demo_serial
+target_link_libraries(demo_serial_client
     pthread
     freertos_kernel
     freertos_config

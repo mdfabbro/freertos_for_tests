@@ -15,7 +15,8 @@ extern "C" {
 #include <chrono>
 #include <thread>
 
-#include "tasks/Sample.h"
+#include "tasks/SerialReaderTask.h"
+#include "tasks/StopSchedulerTask.h"
 
 int main() {
     const std::string serialDevice{"/tmp/serial_test"};

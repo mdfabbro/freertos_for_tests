@@ -1,4 +1,4 @@
-# Serial
+# Serial (Basic)
 
 This demo shows how to simulate a serial communication channel using a PTY on a POSIX system. It runs a minimal FreeRTOS scheduler with two tasks:
 
@@ -6,6 +6,8 @@ This demo shows how to simulate a serial communication channel using a PTY on a 
 2. `StopSchedulerTask`: waits for the notification and calls to stop the scheduler.
 
 This example allows you to interact with the running FreeRTOS tasks from another terminal using a simple echo command, simulating external input to the system.
+
+We will use `xTaskCreate`, `xTaskNotifyGive` and `ulTaskNotifyTake` to avoid relying on standard C++ libraries in portions of code that may later be exported to a microcontroller.
 
 ## To Build
 

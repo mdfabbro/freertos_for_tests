@@ -21,7 +21,8 @@ int main() {
     server.start();
 
     // Create a queue to pass client IDs between tasks
-    QueueHandle_t clientQueue = xQueueCreate(10, sizeof(int));
+    // (!) FreeRTOS-Cpp Queue requires std::optional.
+    FreeRTOS::Queue<int> clientQueue(10);
 
     ReaderTask reader(&server, clientQueue);
     ResponderTask responder(&server, clientQueue);
