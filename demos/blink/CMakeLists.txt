@@ -28,7 +28,7 @@ set(FREERTOS_FOR_TESTS_DIR "${CMAKE_SOURCE_DIR}/../..")
 set(THIRD_PARTY_DIR "${FREERTOS_FOR_TESTS_DIR}/third_party")
 
 # FreeRTOS-Cpp locations
-set(FREERTOS_CPP_DIR "${THIRD_PARTY_DIR}/FreeRTOS-Cpp/FreeRTOS-Cpp")
+set(FREERTOS_CPP_DIR "${THIRD_PARTY_DIR}/wrappers/FreeRTOS-Cpp/FreeRTOS-Cpp")
 
 # Utilities (common helper code and hooks)
 set(UTILS_DIR "${FREERTOS_FOR_TESTS_DIR}/utils")
