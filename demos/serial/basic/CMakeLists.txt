@@ -1,44 +1,45 @@
 cmake_minimum_required(VERSION 3.15)
 
-project(demo_serial LANGUAGES C CXX)
+# Project definition
 
-# C++17
+set(EXEC_NAME demo_serial_basic)
+project(${EXEC_NAME} LANGUAGES C CXX)
+
+message(STATUS "[    ] Project '${EXEC_NAME}' configuration.")
+
+# C++ configuration
+
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_BUILD_TYPE Release)
 
-add_compile_options(-Wall -Wextra -Wpedantic -D_WINDOWS_)
+# Compiler options and flags
 
+add_compile_options(-Wall -Wextra -Wpedantic -D_WINDOWS_)
 set(CMAKE_C_FLAGS_RELEASE "-O3")
 set(CMAKE_C_FLAGS_DEBUG "-O0 -g3")
 
-set(FREERTOS_DIR "${CMAKE_SOURCE_DIR}/../../../FreeRTOS/FreeRTOS")
-set(FREERTOS_CPP_DIR "${CMAKE_SOURCE_DIR}/../../../FreeRTOS-Cpp/FreeRTOS-Cpp")
+# Directory layout
+
+# Root of the FreeRTOS-for-tests environment
+set(FREERTOS_FOR_TESTS_DIR "${CMAKE_SOURCE_DIR}/../../..")
+
+# Third-party dependencies
+set(THIRD_PARTY_DIR "${FREERTOS_FOR_TESTS_DIR}/third_party")
+
+# FreeRTOS and FreeRTOS-Cpp locations
+set(FREERTOS_DIR "${THIRD_PARTY_DIR}/FreeRTOS/FreeRTOS")
 set(FREERTOS_KERNEL_PATH "${FREERTOS_DIR}/Source")
+set(FREERTOS_CPP_DIR "${THIRD_PARTY_DIR}/FreeRTOS-Cpp/FreeRTOS-Cpp")
 
-set(UTILS_DIR "${CMAKE_SOURCE_DIR}/../../../utils")
+# Utilities (common helper code and hooks)
+set(UTILS_DIR "${FREERTOS_FOR_TESTS_DIR}/utils")
 
-message(STATUS "Using FREERTOS_DIR: ${FREERTOS_DIR}")
-message(STATUS "Using FREERTOS_CPP_DIR: ${FREERTOS_CPP_DIR}")
+message(STATUS "Directories:")
+message(STATUS "\t- Using FREERTOS_CPP_DIR:       ${FREERTOS_CPP_DIR}")
+message(STATUS "\t- Using UTILS_DIR:              ${UTILS_DIR}")
 
-set(FREERTOS_HEAP "3" CACHE STRING "" FORCE)
-set(FREERTOS_PORT "GCC_POSIX" CACHE STRING "" FORCE)
-
-add_library(freertos_config INTERFACE)
-target_compile_definitions(freertos_config INTERFACE
-    projENABLE_TRACING=0
-    projCOVERAGE_TEST=0
-)
-target_include_directories(freertos_config INTERFACE
-    ${UTILS_DIR}/FreeRTOS
-    ${FREERTOS_DIR}/Source/include
-    ${FREERTOS_DIR}/Demo/Common/include
-    ${UTILS_DIR}
-)
-
-add_subdirectory(${FREERTOS_KERNEL_PATH} ${CMAKE_CURRENT_BINARY_DIR}/FreeRTOS-Kernel)
-
-target_compile_options(freertos_kernel PRIVATE -Wno-pointer-to-int-cast)
+# Include directories
 
 include_directories(
     ${CMAKE_SOURCE_DIR}/src
@@ -46,28 +47,30 @@ include_directories(
     ${UTILS_DIR}
 )
 
-set(PROJECT_SRC
-    src/main.cpp
-    ${UTILS_DIR}/FreeRTOS/FreeRTOSHooks.cpp
-    src/tasks/SerialReaderTask.cpp
-    src/tasks/StopSchedulerTask.cpp
-)
+# Adding the FreeRTOS
+add_subdirectory(${UTILS_DIR}/FreeRTOS ${CMAKE_CURRENT_BINARY_DIR}/FreeRTOS)
 
-set(SERIAL_SRC
-    ${UTILS_DIR}/Serial/BaseChannel.cpp
-    ${UTILS_DIR}/Serial/Client.cpp
-    ${UTILS_DIR}/Serial/ChannelHandle.cpp
-)
+# Executable definition
 
-add_executable(demo_serial ${PROJECT_SRC} ${SERIAL_SRC})
+# Include user FreeRTOS hooks
+set(FREERTOS_HOOKS ${UTILS_DIR}/FreeRTOS/FreeRTOSHooks.cpp)
 
-target_compile_definitions(demo_serial PUBLIC
+# Collect all .cpp files in the target directories
+file(GLOB_RECURSE PROJECT_SRC CONFIGURE_DEPENDS "src/*.cpp")
+file(GLOB_RECURSE SERIAL_SRC CONFIGURE_DEPENDS "${UTILS_DIR}/Serial/*.cpp")
+
+# Create the final executable
+string(REPLACE ";" "\n\t" CPP_SOURCES "${PROJECT_SRC};${SERIAL_SRC}")
+message(STATUS "Including sources files:\n\t${CPP_SOURCES}")
+add_executable(${EXEC_NAME} ${FREERTOS_HOOKS} ${PROJECT_SRC} ${SERIAL_SRC})
+
+# Public compile definitions for the main target
+target_compile_definitions(${EXEC_NAME} PUBLIC
     projENABLE_TRACING=0
     projCOVERAGE_TEST=0
 )
 
-target_link_libraries(demo_serial
-    pthread
-    freertos_kernel
-    freertos_config
-)
+# Link against necessary libraries
+target_link_libraries(${EXEC_NAME} pthread freertos_kernel freertos_config)
+
+message(STATUS "[DONE] Project '${EXEC_NAME}' configuration.")

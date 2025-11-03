@@ -18,14 +18,14 @@ cmake ..
 make
 ```
 
-The expected binary `demo_serial` will be available in the `build` directory
+The expected binary `demo_serial_basic` will be available in the `build` directory
 
 ## Execute
 
 If you run it from the `build` directory, the expected output will be:
 
 ```bash
-$ ./demo_serial 
+$ ./demo_serial_basic 
 Listening on port: /tmp/serial_test
 To stop the program, try this in a terminal:
     $ echo -n '1' > /tmp/serial_test
@@ -37,7 +37,7 @@ The program will be blocked there, until we write a `1` in `/tmp/serial_test`. I
 echo -n '1' > /tmp/serial_test
 ```
 
-The `demo_serial` will output in the original terminal:
+The `demo_serial_basic` will output in the original terminal:
 
 ```bash
 received: 1

@@ -11,14 +11,14 @@ cmake ..
 make
 ```
 
-The expected binary `demo_tests` will be available in the `build` directory
+The expected binary `demo_gtest_blink` will be available in the `build` directory
 
 ## Execute
 
 If you run it from the `build` directory, the expected output will be:
 
 ```bash
-$ ./demo_tests
+$ ./demo_gtest_blink
 [==========] Running 1 test from 1 test suite.
 [----------] Global test environment set-up.
 [----------] 1 test from BlinkTaskTest

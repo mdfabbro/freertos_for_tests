@@ -1,5 +1,5 @@
 [submodule "third_party/FreeRTOS-Cpp"]
-	path = third_party/FreeRTOS-Cpp
+	path = third_party/wrappers/FreeRTOS-Cpp
 	url = https://github.com/jonenz/FreeRTOS-Cpp.git
 	branch = develop
 
