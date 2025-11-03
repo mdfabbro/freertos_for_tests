@@ -22,13 +22,14 @@ set(CMAKE_C_FLAGS_DEBUG "-O0 -g3")
 # Directory layout
 
 # Root of the FreeRTOS-for-tests environment
-set(FREERTOS_FOR_TESTS_DIR "${CMAKE_SOURCE_DIR}/../..")
+set(FREERTOS_FOR_TESTS_DIR "${CMAKE_SOURCE_DIR}/../../..")
 
 # Third-party dependencies
 set(THIRD_PARTY_DIR "${FREERTOS_FOR_TESTS_DIR}/third_party")
 
 # FreeRTOS-Cpp locations
 set(FREERTOS_CPP_DIR "${THIRD_PARTY_DIR}/wrappers/FreeRTOScpp")
+add_compile_definitions(FREERTOSCPP_USE_CHRONO=0) # Making sure we don't use <chrono>
 
 # Utilities (common helper code and hooks)
 set(UTILS_DIR "${FREERTOS_FOR_TESTS_DIR}/utils")
@@ -37,16 +38,24 @@ message(STATUS "Directories:")
 message(STATUS "\t- Using FREERTOS_CPP_DIR:       ${FREERTOS_CPP_DIR}")
 message(STATUS "\t- Using UTILS_DIR:              ${UTILS_DIR}")
 
-# Include directories
-
-include_directories(
-    ${CMAKE_SOURCE_DIR}/src
-    ${FREERTOS_CPP_DIR}
-    ${UTILS_DIR}
-)
-
 # Adding the FreeRTOS
 add_subdirectory(${UTILS_DIR}/FreeRTOS ${CMAKE_CURRENT_BINARY_DIR}/FreeRTOS)
+
+# Google Test
+
+# Fetch Google Test
+include(FetchContent)
+FetchContent_Declare(
+  googletest
+  URL https://github.com/google/googletest/archive/refs/heads/main.zip
+)
+
+set(gtest_force_shared_crt ON CACHE BOOL "" FORCE)
+FetchContent_MakeAvailable(googletest)
+
+# Include CTest and enable tests
+include(CTest)
+enable_testing()
 
 # Executable definition
 
@@ -55,12 +64,22 @@ set(FREERTOS_HOOKS ${UTILS_DIR}/FreeRTOS/FreeRTOSHooks.cpp)
 
 # Collect all .cpp files in the target directories
 file(GLOB_RECURSE PROJECT_SRC CONFIGURE_DEPENDS "src/*.cpp")
+file(GLOB_RECURSE LED_SRC CONFIGURE_DEPENDS "${UTILS_DIR}/Led/*.cpp")
 file(GLOB_RECURSE WRAPPER_SRC CONFIGURE_DEPENDS "${FREERTOS_CPP_DIR}/*.cpp")
 
 # Create the final executable
 string(REPLACE ";" "\n\t" CPP_SOURCES "${PROJECT_SRC}")
-message(STATUS "Including sources files:\n\t${CPP_SOURCES}")
-add_executable(${EXEC_NAME} ${FREERTOS_HOOKS} ${PROJECT_SRC} ${WRAPPER_SRC})
+message(STATUS "Including sources files:\n\t${CPP_SOURCES};${LED_SRC}")
+add_executable(${EXEC_NAME} ${FREERTOS_HOOKS} ${PROJECT_SRC} ${WRAPPER_SRC} ${LED_SRC})
+
+# Include directories
+
+target_include_directories(${EXEC_NAME} PUBLIC
+    ${CMAKE_SOURCE_DIR}/src/
+    ${FREERTOS_CPP_DIR}
+    ${UTILS_DIR}
+)
+
 
 # Public compile definitions for the main target
 target_compile_definitions(${EXEC_NAME} PUBLIC
@@ -70,5 +89,27 @@ target_compile_definitions(${EXEC_NAME} PUBLIC
 
 # Link against necessary libraries
 target_link_libraries(${EXEC_NAME} pthread freertos_kernel freertos_config)
+
+# Add Test Executable
+file(GLOB_RECURSE TESTS_SRC CONFIGURE_DEPENDS "tests/*.cpp")
+add_executable(${EXEC_NAME}_test ${TESTS_SRC})
+
+target_include_directories(${EXEC_NAME}_test PRIVATE
+    ${CMAKE_SOURCE_DIR}/src
+    ${CMAKE_SOURCE_DIR}/tests/mocks
+    ${UTILS_DIR}
+)
+
+# Public compile definitions for the main target
+target_compile_definitions(${EXEC_NAME}_test PUBLIC
+    projENABLE_TRACING=0
+    projCOVERAGE_TEST=0
+)
+
+# Link against necessary libraries
+target_link_libraries(${EXEC_NAME}_test gtest_main pthread)
+
+# Adding test
+add_test(NAME ${EXEC_NAME}_test COMMAND ${EXEC_NAME}_test)
 
 message(STATUS "[DONE] Project '${EXEC_NAME}' configuration.")

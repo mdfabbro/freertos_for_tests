@@ -15,7 +15,6 @@ message(STATUS "From 'freertos_config', we are using the directories:")
 message(STATUS "\t- Using FREERTOS_SOURCE_DIR:      ${FREERTOS_SOURCE_DIR}")
 message(STATUS "\t- Using FREERTOS_DEMO_COMMON_DIR: ${FREERTOS_DEMO_COMMON_DIR}")
 
-
 # Create an INTERFACE library for FreeRTOS configuration
 add_library(freertos_config INTERFACE)
 
