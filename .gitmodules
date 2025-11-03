@@ -1,8 +1,9 @@
-[submodule "FreeRTOS-Cpp"]
-	path = FreeRTOS-Cpp
+[submodule "third_party/FreeRTOS-Cpp"]
+	path = third_party/FreeRTOS-Cpp
 	url = https://github.com/jonenz/FreeRTOS-Cpp.git
 	branch = develop
-[submodule "FreeRTOS"]
-	path = FreeRTOS
+
+[submodule "third_party/FreeRTOS"]
+	path = third_party/FreeRTOS
 	url = https://github.com/FreeRTOS/FreeRTOS.git
 	branch = main
