@@ -79,8 +79,9 @@ file(GLOB_RECURSE LEAK_DETECTOR_SRC CONFIGURE_DEPENDS "${UTILS_DIR}/LeakDetector
 
 # Create the final executable
 string(REPLACE ";" "\n\t" CPP_SOURCES "${PROJECT_SRC};${TESTS_SRC};${LEAK_DETECTOR_SRC}")
-message(STATUS "Including sources files:\n\t${CPP_SOURCES}")
-add_executable(${EXEC_NAME} ${FREERTOS_HOOKS} ${PROJECT_SRC} ${TESTS_SRC} ${LEAK_DETECTOR_SRC})
+message(STATUS "Including sources files:\n\t${CPP_SOURCES}\n\t")
+
+add_executable(${EXEC_NAME} ${FREERTOS_HOOKS} ${PROJECT_SRC} ${TESTS_SRC} ${LEAK_DETECTOR_SRC} ${UTILS_DIR}/LeakDetector/heaps/heap_3.c)
 
 # Public compile definitions for the main target
 target_compile_definitions(${EXEC_NAME} PUBLIC

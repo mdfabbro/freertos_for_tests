@@ -2,6 +2,8 @@
 #include <cstdlib>
 #include <new>
 
+#include "LeakDetector.h"
+
 LeakDetector::LeakDetector() : bytes_in_use{0LL} {}
 
 void LeakDetector::allocated(std::size_t allocated_bytes) {
@@ -20,12 +22,29 @@ void LeakDetector::reset() {
     bytes_in_use.store(0LL);
 }
 
+// 🔹 Define two global, independent LeakDetector instances
+namespace LeakDetectors {
+
+    static LeakDetector system_instance;
+    static LeakDetector rtos_instance;
+
+    LeakDetector& HeapSystem() {
+        return system_instance;
+    }
+
+    LeakDetector& HeapRTOS() {
+        return rtos_instance;
+    }
+
+}
+
+
 void* operator new(std::size_t bytes_to_allocate) {
     void* p = std::malloc(sizeof(std::max_align_t) + bytes_to_allocate);
     if (!p) throw std::bad_alloc{};
 
     new (p) std::size_t{bytes_to_allocate};
-    LeakDetector::get().allocated(bytes_to_allocate);
+    LeakDetectors::HeapSystem().allocated(bytes_to_allocate);
     return static_cast<std::max_align_t*>(p) + 1;
 }
 
@@ -33,7 +52,7 @@ void operator delete(void* p) noexcept {
     if (!p) return;
 
     p = static_cast<std::max_align_t*>(p) - 1;
-    LeakDetector::get().freed(*static_cast<std::size_t*>(p));
+    LeakDetectors::HeapSystem().freed(*static_cast<std::size_t*>(p));
     std::free(p);
 }
 
@@ -42,7 +61,7 @@ void operator delete(void *p, std::size_t) noexcept {
     if (!p) return;
 
     p = static_cast<std::max_align_t*>(p) - 1;
-    LeakDetector::get().freed(*static_cast<std::size_t*>(p));
+    LeakDetectors::HeapSystem().freed(*static_cast<std::size_t*>(p));
     std::free(p);
 }
 
