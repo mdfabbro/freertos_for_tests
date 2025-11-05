@@ -35,9 +35,7 @@ namespace LeakDetectors {
     LeakDetector& HeapRTOS() {
         return rtos_instance;
     }
-
 }
-
 
 void* operator new(std::size_t bytes_to_allocate) {
     void* p = std::malloc(sizeof(std::max_align_t) + bytes_to_allocate);
