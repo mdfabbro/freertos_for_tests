@@ -1,5 +1,5 @@
 #include <gtest/gtest.h>
-#include "Fifo/Fifo.h"
+#include "Fifo/FifoBasic.h"
 
 struct Item {
     int value;
@@ -26,7 +26,7 @@ TEST(FifoBasicTest, PopShouldRemoveFirstElement) {
     fifo.push(&a);
     fifo.push(&b);
 
-    ASSERT_TRUE(fifo.pop());  // elimina el primero
+    ASSERT_TRUE(fifo.pop()); 
     Item* newFirst = fifo.begin();
     EXPECT_EQ(newFirst->value, 20);
 }
@@ -49,5 +49,5 @@ TEST(FifoBasicTest, MultiplePushAndPopSequence) {
     EXPECT_TRUE(fifo.pop());
     EXPECT_EQ(fifo.begin()->value, 3);
     EXPECT_TRUE(fifo.pop());
-    EXPECT_FALSE(fifo.pop()); // ya está vacío
+    EXPECT_FALSE(fifo.pop()); 
 }
