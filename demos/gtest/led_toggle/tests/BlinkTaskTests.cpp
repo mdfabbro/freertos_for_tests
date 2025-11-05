@@ -4,7 +4,7 @@
 
 using namespace testing;
 
-+TEST(BlinkTaskTests, StepTogglesLed) {
+TEST(BlinkTaskTests, StepTogglesLed) {
     MockLed led;
     
     led.Set(Led::ILed::State::Off);
