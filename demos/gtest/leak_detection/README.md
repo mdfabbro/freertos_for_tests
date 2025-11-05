@@ -1,7 +1,7 @@
 # GTest | Leak Detector
 
 This test demonstrates how to run a minimal FreeRTOS task that performs a simple operation, 
-while using `LeakDetector` to check for memory leaks.
+while using `LeakDetectors` to check for memory leaks.
 
 ## To Build
 
