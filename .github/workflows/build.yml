@@ -50,6 +50,7 @@ jobs:
           - demos/gtest/basic
           - demos/gtest/leak_detection
           - demos/gtest/task_called
+          - demos/gtest/utils/queues
 
     steps:
       - name: Checkout repository
