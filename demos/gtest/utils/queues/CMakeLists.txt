@@ -2,7 +2,7 @@ cmake_minimum_required(VERSION 3.15)
 
 # Project definition
 
-set(EXEC_NAME demo_utils_fifo)
+set(EXEC_NAME demo_utils_queue)
 project(${EXEC_NAME} LANGUAGES C CXX)
 
 message(STATUS "[    ] Project '${EXEC_NAME}' configuration.")
@@ -49,15 +49,15 @@ enable_testing()
 # Executable definition
 
 # Collect all .cpp files in the target directories
-file(GLOB_RECURSE FIFO_SRC CONFIGURE_DEPENDS "${UTILS_DIR}/Fifo/*.cpp")
+file(GLOB_RECURSE QUEUE_SRC CONFIGURE_DEPENDS "${UTILS_DIR}/Queue/*.cpp")
+file(GLOB_RECURSE LEAK_DETECTOR_SRC CONFIGURE_DEPENDS "${UTILS_DIR}/LeakDetector/*.cpp")
+file(GLOB_RECURSE TESTS_SRC CONFIGURE_DEPENDS "tests/*.cpp")
 
-# Create the final executable
-string(REPLACE ";" "\n\t" CPP_SOURCES "${PROJECT_SRC}")
-message(STATUS "Including sources files:\n\t${FIFO_SRC}")
+string(REPLACE ";" "\n\t" CPP_SOURCES "${PROJECT_SRC};${TESTS_SRC};${LEAK_DETECTOR_SRC}")
+message(STATUS "Including sources files:\n\t${CPP_SOURCES}\n\t")
 
 # Add Test Executable
-file(GLOB_RECURSE TESTS_SRC CONFIGURE_DEPENDS "tests/*.cpp")
-add_executable(${EXEC_NAME}_test ${TESTS_SRC})
+add_executable(${EXEC_NAME}_test ${TESTS_SRC} ${QUEUE_SRC} ${LEAK_DETECTOR_SRC})
 
 target_include_directories(${EXEC_NAME}_test PRIVATE
     ${CMAKE_SOURCE_DIR}/tests/mocks

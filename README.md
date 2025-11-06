@@ -15,5 +15,6 @@ Available demos include:
 5. **gtest/led_toggle:** Unit tests using a mocked LED, including a basic blinking example that validates the LED toggle behavior under FreeRTOS task scheduling.
 6. **gtest/leak_detector:** This test demonstrates how to run a minimal task that performs a simple operation, while using `LeakDetector` to check for memory leaks.
 7. **gtest/task_called:** This test will create a task, start the scheduller and check if the task was called.
-8. **http/server**: Minimal HTTP server running on a POSIX system with FreeRTOS tasks. Uses a ReaderTask to detect incoming clients and a ResponderTask to handle requests asynchronously, allowing testing of FreeRTOS-style scheduling and multi-client HTTP handling on a PC.
-9. **timers/led_pwm**: Demonstrates the use of a FreeRTOS software timer to implement a simple LED PWM. The timer adjusts the LED’s ON/OFF times based on the configured duty cycle (`pwm`) and total period (`period`).
+8. **gtest/utils/queues:** Some tests for the different types of queues available in `utils`.
+9. **http/server**: Minimal HTTP server running on a POSIX system with FreeRTOS tasks. Uses a ReaderTask to detect incoming clients and a ResponderTask to handle requests asynchronously, allowing testing of FreeRTOS-style scheduling and multi-client HTTP handling on a PC.
+10. **timers/led_pwm**: Demonstrates the use of a FreeRTOS software timer to implement a simple LED PWM. The timer adjusts the LED’s ON/OFF times based on the configured duty cycle (`pwm`) and total period (`period`).

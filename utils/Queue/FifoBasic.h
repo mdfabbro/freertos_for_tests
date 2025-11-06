@@ -6,6 +6,32 @@
 template<class T>
 class FifoBasic : public IFifo<T> {
 public:
+    ~FifoBasic() {
+        while (begin()) {
+            // Potential Memory leak with the stuff stored in
+            // the Element->value, if it was not freed outside
+            pop();
+        }
+    }
+
+    FifoBasic() = default;
+    FifoBasic(const FifoBasic & origin) = delete;
+    FifoBasic& operator=(const FifoBasic & origin) = delete;
+    FifoBasic(FifoBasic && origin) {
+        // To use :
+        //      FifoBasic a = make_fifo();
+        this->start = origin.start;
+        origin.start = nullptr;
+    }
+    FifoBasic& operator=(FifoBasic&& origin) {
+        // To use :
+        //      FifoBasic a;
+        //      a = make_fifo();
+        this->start = origin.start;
+        origin.start = nullptr;
+        return *this;
+    }
+
     T* begin() override {
         return start ? start->value : nullptr;
     }
