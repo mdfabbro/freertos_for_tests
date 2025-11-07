@@ -17,12 +17,12 @@ TEST(DequeLinkedTest, PushBackShouldInsertAtEnd) {
     EXPECT_TRUE(deque.push_back(&c));
 
     // 'begin' should point to the first inserted element
-    ASSERT_NE(deque.begin(), nullptr);
-    EXPECT_EQ(deque.begin()->value, 10);
+    ASSERT_NE(deque.front(), nullptr);
+    EXPECT_EQ(deque.front()->value, 10);
 
     // 'end' should point to the last inserted element
-    ASSERT_NE(deque.end(), nullptr);
-    EXPECT_EQ(deque.end()->value, 30);
+    ASSERT_NE(deque.back(), nullptr);
+    EXPECT_EQ(deque.back()->value, 30);
 }
 
 TEST(DequeLinkedTest, PushFrontShouldInsertAtBeginning) {
@@ -35,12 +35,12 @@ TEST(DequeLinkedTest, PushFrontShouldInsertAtBeginning) {
     EXPECT_TRUE(deque.push_front(&c));
 
     // After multiple push_front calls, 'begin' should be the last pushed
-    ASSERT_NE(deque.begin(), nullptr);
-    EXPECT_EQ(deque.begin()->value, 30);
+    ASSERT_NE(deque.front(), nullptr);
+    EXPECT_EQ(deque.front()->value, 30);
 
     // The last pushed_back element (which was first inserted) should be at the end
-    ASSERT_NE(deque.end(), nullptr);
-    EXPECT_EQ(deque.end()->value, 10);
+    ASSERT_NE(deque.back(), nullptr);
+    EXPECT_EQ(deque.back()->value, 10);
 }
 
 TEST(DequeLinkedTest, PopFrontShouldRemoveFromBeginning) {
@@ -52,13 +52,13 @@ TEST(DequeLinkedTest, PopFrontShouldRemoveFromBeginning) {
     deque.push_back(&c);
 
     EXPECT_TRUE(deque.pop_front()); // removes 'a'
-    EXPECT_EQ(deque.begin()->value, 20);
+    EXPECT_EQ(deque.front()->value, 20);
 
     EXPECT_TRUE(deque.pop_front()); // removes 'b'
-    EXPECT_EQ(deque.begin()->value, 30);
+    EXPECT_EQ(deque.front()->value, 30);
 
     EXPECT_TRUE(deque.pop_front()); // removes 'c'
-    EXPECT_EQ(deque.begin(), nullptr);
+    EXPECT_EQ(deque.front(), nullptr);
     EXPECT_FALSE(deque.pop_front()); // already empty
 }
 
@@ -71,13 +71,13 @@ TEST(DequeLinkedTest, PopBackShouldRemoveFromEnd) {
     deque.push_back(&c);
 
     EXPECT_TRUE(deque.pop_back());  // removes 'c'
-    EXPECT_EQ(deque.end()->value, 20);
+    EXPECT_EQ(deque.back()->value, 20);
 
     EXPECT_TRUE(deque.pop_back());  // removes 'b'
-    EXPECT_EQ(deque.end()->value, 10);
+    EXPECT_EQ(deque.back()->value, 10);
 
     EXPECT_TRUE(deque.pop_back());  // removes 'a'
-    EXPECT_EQ(deque.end(), nullptr);
+    EXPECT_EQ(deque.back(), nullptr);
     EXPECT_FALSE(deque.pop_back()); // already empty
 }
 
@@ -90,11 +90,11 @@ TEST(DequeLinkedTest, PushFrontAndBackShouldWorkTogether) {
     deque.push_back(&c);
 
     // Order should now be: b (front), a, c (back)
-    ASSERT_NE(deque.begin(), nullptr);
-    EXPECT_EQ(deque.begin()->value, 20);
+    ASSERT_NE(deque.front(), nullptr);
+    EXPECT_EQ(deque.front()->value, 20);
 
-    ASSERT_NE(deque.end(), nullptr);
-    EXPECT_EQ(deque.end()->value, 30);
+    ASSERT_NE(deque.back(), nullptr);
+    EXPECT_EQ(deque.back()->value, 30);
 }
 
 TEST(DequeLinkedTest, PopFrontAndBackShouldLeaveEmpty) {
@@ -107,8 +107,8 @@ TEST(DequeLinkedTest, PopFrontAndBackShouldLeaveEmpty) {
     EXPECT_TRUE(deque.pop_back());  // remove 'b'
     EXPECT_TRUE(deque.pop_front()); // remove 'a'
 
-    EXPECT_EQ(deque.begin(), nullptr);
-    EXPECT_EQ(deque.end(), nullptr);
+    EXPECT_EQ(deque.front(), nullptr);
+    EXPECT_EQ(deque.back(), nullptr);
     EXPECT_FALSE(deque.pop_back());
     EXPECT_FALSE(deque.pop_front());
 }
@@ -124,14 +124,14 @@ TEST(DequeLinkedTest, MoveConstructorShouldTransferOwnership) {
     DequeLinked<Item> deque2(static_cast<DequeLinked<Item>&&>(deque1));
 
     // deque2 should now own the nodes
-    ASSERT_NE(deque2.begin(), nullptr);
-    EXPECT_EQ(deque2.begin()->value, 1);
-    ASSERT_NE(deque2.end(), nullptr);
-    EXPECT_EQ(deque2.end()->value, 2);
+    ASSERT_NE(deque2.front(), nullptr);
+    EXPECT_EQ(deque2.front()->value, 1);
+    ASSERT_NE(deque2.back(), nullptr);
+    EXPECT_EQ(deque2.back()->value, 2);
 
     // deque1 should be empty after move
-    EXPECT_EQ(deque1.begin(), nullptr);
-    EXPECT_EQ(deque1.end(), nullptr);
+    EXPECT_EQ(deque1.front(), nullptr);
+    EXPECT_EQ(deque1.back(), nullptr);
     EXPECT_FALSE(deque1.pop_front());
     EXPECT_FALSE(deque1.pop_back());
 }
@@ -148,14 +148,14 @@ TEST(DequeLinkedTest, MoveAssignmentShouldTransferOwnership) {
     deque2 = static_cast<DequeLinked<Item>&&>(deque1);
 
     // deque2 should now contain elements from deque1
-    ASSERT_NE(deque2.begin(), nullptr);
-    EXPECT_EQ(deque2.begin()->value, 10);
-    ASSERT_NE(deque2.end(), nullptr);
-    EXPECT_EQ(deque2.end()->value, 20);
+    ASSERT_NE(deque2.front(), nullptr);
+    EXPECT_EQ(deque2.front()->value, 10);
+    ASSERT_NE(deque2.back(), nullptr);
+    EXPECT_EQ(deque2.back()->value, 20);
 
     // deque1 should now be empty
-    EXPECT_EQ(deque1.begin(), nullptr);
-    EXPECT_EQ(deque1.end(), nullptr);
+    EXPECT_EQ(deque1.front(), nullptr);
+    EXPECT_EQ(deque1.back(), nullptr);
     EXPECT_FALSE(deque1.pop_front());
     EXPECT_FALSE(deque1.pop_back());
 }
@@ -178,8 +178,8 @@ TEST(DequeLinkedTest, DestructorShouldCleanAllElements) {
 TEST(DequeLinkedTest, DefaultConstructorShouldInitializeEmpty) {
     DequeLinked<Item> deque;
 
-    EXPECT_EQ(deque.begin(), nullptr);
-    EXPECT_EQ(deque.end(), nullptr);
+    EXPECT_EQ(deque.front(), nullptr);
+    EXPECT_EQ(deque.back(), nullptr);
     EXPECT_FALSE(deque.pop_front());
     EXPECT_FALSE(deque.pop_back());
 }
@@ -215,4 +215,39 @@ TEST(DequeLinkedTest, LeakDetectionsNoLeakWhenEmpty) {
     const auto post = LeakDetectors::HeapSystem().in_use();
 
     EXPECT_EQ(pre, post);
+}
+
+TEST(DequeLinkedTest, VoidQueueBasic) {
+    DequeLinked<void> deque;
+
+    EXPECT_FALSE(deque.pop_front()); // Empty!
+
+    EXPECT_TRUE(deque.push_back());
+    EXPECT_TRUE(deque.push_back());
+    EXPECT_TRUE(deque.push_back());
+    EXPECT_TRUE(deque.push_back());
+    EXPECT_TRUE(deque.push_back());   
+
+    EXPECT_TRUE(deque.pop_front());
+    EXPECT_TRUE(deque.pop_front());
+    EXPECT_TRUE(deque.pop_front());
+    EXPECT_TRUE(deque.pop_front());
+    EXPECT_TRUE(deque.pop_front());
+    EXPECT_FALSE(deque.pop_front()); // Empty!
+
+    EXPECT_FALSE(deque.pop_back()); // Empty!
+
+    EXPECT_TRUE(deque.push_front());
+    EXPECT_TRUE(deque.push_front());
+    EXPECT_TRUE(deque.push_front());
+    EXPECT_TRUE(deque.push_front());
+    EXPECT_TRUE(deque.push_front());   
+
+    EXPECT_TRUE(deque.pop_back());
+    EXPECT_TRUE(deque.pop_back());
+    EXPECT_TRUE(deque.pop_back());
+    EXPECT_TRUE(deque.pop_back());
+    EXPECT_TRUE(deque.pop_back());
+    EXPECT_FALSE(deque.pop_back()); // Empty!
+
 }

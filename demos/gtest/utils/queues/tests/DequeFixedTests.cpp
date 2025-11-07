@@ -17,11 +17,11 @@ TEST(DequeFixedTest, PushBackShouldInsertAtEnd) {
     EXPECT_TRUE(deque.push_back(&b));
     EXPECT_TRUE(deque.push_back(&c));
 
-    ASSERT_NE(deque.begin(), nullptr);
-    EXPECT_EQ(deque.begin()->value, 10);
+    ASSERT_NE(deque.front(), nullptr);
+    EXPECT_EQ(deque.front()->value, 10);
 
-    ASSERT_NE(deque.end(), nullptr);
-    EXPECT_EQ(deque.end()->value, 30);
+    ASSERT_NE(deque.back(), nullptr);
+    EXPECT_EQ(deque.back()->value, 30);
 }
 
 TEST(DequeFixedTest, PushFrontShouldInsertAtBeginning) {
@@ -33,11 +33,11 @@ TEST(DequeFixedTest, PushFrontShouldInsertAtBeginning) {
     EXPECT_TRUE(deque.push_front(&b));
     EXPECT_TRUE(deque.push_front(&c));
 
-    ASSERT_NE(deque.begin(), nullptr);
-    EXPECT_EQ(deque.begin()->value, 30);
+    ASSERT_NE(deque.front(), nullptr);
+    EXPECT_EQ(deque.front()->value, 30);
 
-    ASSERT_NE(deque.end(), nullptr);
-    EXPECT_EQ(deque.end()->value, 10);
+    ASSERT_NE(deque.back(), nullptr);
+    EXPECT_EQ(deque.back()->value, 10);
 }
 
 TEST(DequeFixedTest, PopFrontShouldRemoveFromBeginning) {
@@ -49,13 +49,13 @@ TEST(DequeFixedTest, PopFrontShouldRemoveFromBeginning) {
     deque.push_back(&c);
 
     EXPECT_TRUE(deque.pop_front()); // removes 'a'
-    EXPECT_EQ(deque.begin()->value, 20);
+    EXPECT_EQ(deque.front()->value, 20);
 
     EXPECT_TRUE(deque.pop_front()); // removes 'b'
-    EXPECT_EQ(deque.begin()->value, 30);
+    EXPECT_EQ(deque.front()->value, 30);
 
     EXPECT_TRUE(deque.pop_front()); // removes 'c'
-    EXPECT_EQ(deque.begin(), nullptr);
+    EXPECT_EQ(deque.front(), nullptr);
     EXPECT_FALSE(deque.pop_front()); // already empty
 }
 
@@ -68,13 +68,13 @@ TEST(DequeFixedTest, PopBackShouldRemoveFromEnd) {
     deque.push_back(&c);
 
     EXPECT_TRUE(deque.pop_back());  // removes 'c'
-    EXPECT_EQ(deque.end()->value, 20);
+    EXPECT_EQ(deque.back()->value, 20);
 
     EXPECT_TRUE(deque.pop_back());  // removes 'b'
-    EXPECT_EQ(deque.end()->value, 10);
+    EXPECT_EQ(deque.back()->value, 10);
 
     EXPECT_TRUE(deque.pop_back());  // removes 'a'
-    EXPECT_EQ(deque.end(), nullptr);
+    EXPECT_EQ(deque.back(), nullptr);
     EXPECT_FALSE(deque.pop_back()); // already empty
 }
 
@@ -87,11 +87,11 @@ TEST(DequeFixedTest, PushFrontAndBackShouldWorkTogether) {
     deque.push_back(&c);
 
     // Order: b (front), a, c (back)
-    ASSERT_NE(deque.begin(), nullptr);
-    EXPECT_EQ(deque.begin()->value, 20);
+    ASSERT_NE(deque.front(), nullptr);
+    EXPECT_EQ(deque.front()->value, 20);
 
-    ASSERT_NE(deque.end(), nullptr);
-    EXPECT_EQ(deque.end()->value, 30);
+    ASSERT_NE(deque.back(), nullptr);
+    EXPECT_EQ(deque.back()->value, 30);
 }
 
 TEST(DequeFixedTest, PopFrontAndBackShouldLeaveEmpty) {
@@ -104,8 +104,8 @@ TEST(DequeFixedTest, PopFrontAndBackShouldLeaveEmpty) {
     EXPECT_TRUE(deque.pop_back());  // remove 'b'
     EXPECT_TRUE(deque.pop_front()); // remove 'a'
 
-    EXPECT_EQ(deque.begin(), nullptr);
-    EXPECT_EQ(deque.end(), nullptr);
+    EXPECT_EQ(deque.front(), nullptr);
+    EXPECT_EQ(deque.back(), nullptr);
     EXPECT_FALSE(deque.pop_back());
     EXPECT_FALSE(deque.pop_front());
 }
@@ -121,13 +121,13 @@ TEST(DequeFixedTest, MoveConstructorShouldTransferOwnership) {
 
     DequeFixed<Item, 8> deque2(static_cast<DequeFixed<Item,8>&&>(deque1));
 
-    ASSERT_NE(deque2.begin(), nullptr);
-    EXPECT_EQ(deque2.begin()->value, 1);
-    ASSERT_NE(deque2.end(), nullptr);
-    EXPECT_EQ(deque2.end()->value, 2);
+    ASSERT_NE(deque2.front(), nullptr);
+    EXPECT_EQ(deque2.front()->value, 1);
+    ASSERT_NE(deque2.back(), nullptr);
+    EXPECT_EQ(deque2.back()->value, 2);
 
-    EXPECT_EQ(deque1.begin(), nullptr);
-    EXPECT_EQ(deque1.end(), nullptr);
+    EXPECT_EQ(deque1.front(), nullptr);
+    EXPECT_EQ(deque1.back(), nullptr);
     EXPECT_FALSE(deque1.pop_front());
     EXPECT_FALSE(deque1.pop_back());
 }
@@ -142,13 +142,13 @@ TEST(DequeFixedTest, MoveAssignmentShouldTransferOwnership) {
 
     deque2 = static_cast<DequeFixed<Item,8>&&>(deque1);
 
-    ASSERT_NE(deque2.begin(), nullptr);
-    EXPECT_EQ(deque2.begin()->value, 10);
-    ASSERT_NE(deque2.end(), nullptr);
-    EXPECT_EQ(deque2.end()->value, 20);
+    ASSERT_NE(deque2.front(), nullptr);
+    EXPECT_EQ(deque2.front()->value, 10);
+    ASSERT_NE(deque2.back(), nullptr);
+    EXPECT_EQ(deque2.back()->value, 20);
 
-    EXPECT_EQ(deque1.begin(), nullptr);
-    EXPECT_EQ(deque1.end(), nullptr);
+    EXPECT_EQ(deque1.front(), nullptr);
+    EXPECT_EQ(deque1.back(), nullptr);
     EXPECT_FALSE(deque1.pop_front());
     EXPECT_FALSE(deque1.pop_back());
 }
@@ -169,8 +169,8 @@ TEST(DequeFixedTest, DestructorShouldCleanAllElements) {
 TEST(DequeFixedTest, DefaultConstructorShouldInitializeEmpty) {
     DequeFixed<Item, 8> deque;
 
-    EXPECT_EQ(deque.begin(), nullptr);
-    EXPECT_EQ(deque.end(), nullptr);
+    EXPECT_EQ(deque.front(), nullptr);
+    EXPECT_EQ(deque.back(), nullptr);
     EXPECT_FALSE(deque.pop_front());
     EXPECT_FALSE(deque.pop_back());
 }
@@ -224,13 +224,37 @@ TEST(DequeFixedTest, ShouldNotAllowPushWhenFull) {
     EXPECT_FALSE(deque.push_back(&e));   
     EXPECT_FALSE(deque.push_front(&e)); 
 
-    ASSERT_NE(deque.begin(), nullptr);
-    EXPECT_EQ(deque.begin()->value, 1);
-    ASSERT_NE(deque.end(), nullptr);
-    EXPECT_EQ(deque.end()->value, 5);
+    ASSERT_NE(deque.front(), nullptr);
+    EXPECT_EQ(deque.front()->value, 1);
+    ASSERT_NE(deque.back(), nullptr);
+    EXPECT_EQ(deque.back()->value, 5);
 
     EXPECT_TRUE(deque.pop_front());     
     EXPECT_TRUE(deque.push_back(&e));  
 
-    EXPECT_EQ(deque.end()->value, 5);
+    EXPECT_EQ(deque.back()->value, 5);
+}
+
+TEST(DequeFixedTest, VoidQueueBasic) {
+    DequeFixed<void,5> deque;
+
+    EXPECT_FALSE(deque.pop_front()); // Empty!
+
+    EXPECT_TRUE(deque.push_back());
+    EXPECT_TRUE(deque.push_back());
+    EXPECT_TRUE(deque.push_back());
+    EXPECT_TRUE(deque.push_back());
+    EXPECT_TRUE(deque.push_back());   
+
+    // It should be full!
+    EXPECT_FALSE(deque.push_back());   
+    EXPECT_FALSE(deque.push_front()); 
+
+    EXPECT_TRUE(deque.pop_front());
+    EXPECT_TRUE(deque.pop_front());
+    EXPECT_TRUE(deque.pop_front());
+    EXPECT_TRUE(deque.pop_front());
+    EXPECT_TRUE(deque.pop_front());
+    EXPECT_FALSE(deque.pop_front()); // Empty!
+
 }
