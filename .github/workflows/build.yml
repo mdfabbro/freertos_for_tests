@@ -17,6 +17,7 @@ jobs:
           - demos/http
           - demos/serial/basic
           - demos/serial/client_server
+          - demos/timers/led_pwm
 
     steps:
       - name: Checkout repository
@@ -49,6 +50,7 @@ jobs:
           - demos/gtest/basic
           - demos/gtest/leak_detection
           - demos/gtest/task_called
+          - demos/gtest/utils/queues
 
     steps:
       - name: Checkout repository

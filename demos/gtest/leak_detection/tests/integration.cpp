@@ -68,11 +68,10 @@ bool runTaskWithLeakCheck(std::chrono::milliseconds maxWait = std::chrono::milli
 
     // Launch scheduler detached
     const auto timeout = runner.waitTask(maxWait);
+    const auto post = LeakDetectors::HeapSystem().in_use();
 
     vTaskDelete(pxCreatedTask); // Ensure task control block is freed
     const auto postRTOS = LeakDetectors::HeapRTOS().in_use();
-
-    const auto post = LeakDetectors::HeapSystem().in_use();
 
     // Return true only if:
     //   - The scheduler completed (no timeout).
