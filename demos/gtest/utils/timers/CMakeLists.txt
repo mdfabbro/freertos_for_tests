@@ -2,7 +2,7 @@ cmake_minimum_required(VERSION 3.15)
 
 # Project definition
 
-set(EXEC_NAME demo_gtest_timer_custom)
+set(EXEC_NAME demo_gtest_utils_timers)
 project(${EXEC_NAME} LANGUAGES C CXX)
 
 message(STATUS "[    ] Project '${EXEC_NAME}' configuration.")
