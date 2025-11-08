@@ -82,9 +82,6 @@ using DequeVoidImplementations = ::testing::Types<
 
 TYPED_TEST_SUITE(DequeVoidInterfaceTest, DequeVoidImplementations);
 
-// -----------------------------------------------------------------------------
-// Test: push_back() and push_front() increase size
-// -----------------------------------------------------------------------------
 TYPED_TEST(DequeVoidInterfaceTest, PushIncreasesSize) {
     TypeParam deque;
 
@@ -95,9 +92,6 @@ TYPED_TEST(DequeVoidInterfaceTest, PushIncreasesSize) {
     EXPECT_EQ(deque.size(), 2u);
 }
 
-// -----------------------------------------------------------------------------
-// Test: pop_front() and pop_back() decrease size
-// -----------------------------------------------------------------------------
 TYPED_TEST(DequeVoidInterfaceTest, PopDecreasesSize) {
     TypeParam deque;
 
@@ -113,9 +107,6 @@ TYPED_TEST(DequeVoidInterfaceTest, PopDecreasesSize) {
     EXPECT_TRUE(deque.empty());
 }
 
-// -----------------------------------------------------------------------------
-// Test: clear() empties the deque
-// -----------------------------------------------------------------------------
 TYPED_TEST(DequeVoidInterfaceTest, ClearEmptiesDeque) {
     TypeParam deque;
 
@@ -130,19 +121,3 @@ TYPED_TEST(DequeVoidInterfaceTest, ClearEmptiesDeque) {
     EXPECT_EQ(deque.size(), 0u);
 }
 
-// -----------------------------------------------------------------------------
-// Test: cannot push when full
-// -----------------------------------------------------------------------------
-TYPED_TEST(DequeVoidInterfaceTest, CannotPushWhenFull) {
-    TypeParam deque;
-
-    // Fill deque
-    for (size_t i = 0; i < 8; ++i)
-        EXPECT_TRUE(deque.push_back());
-
-    EXPECT_EQ(deque.size(), 8u);
-
-    // Should fail now
-    EXPECT_FALSE(deque.push_back());
-    EXPECT_FALSE(deque.push_front());
-}

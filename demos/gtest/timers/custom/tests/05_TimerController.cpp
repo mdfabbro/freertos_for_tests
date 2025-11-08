@@ -107,9 +107,7 @@ TEST_F(TimerControllerTest, CallbackTwoTimers) {
         Timers::incrementCurrentTicks(50);
         Timers::TimerController();
     }
-
     EXPECT_EQ(Timers::Running::GetList().size(),2); // The timers should still be there
     EXPECT_EQ(t1.callbackCount, CalledTimes);       // It was called N times
     EXPECT_EQ(t2.callbackCount, CalledTimes/2);     // It was called N/2 times
-
 }
