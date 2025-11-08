@@ -9,11 +9,16 @@ namespace Timers {
 struct Command {
     enum TypeSet{ START, RESET, STOP, RELOAD, SINGLE_SHOT };
     TypeSet  type;
-    Ticks creation;
     Timer * timer;
+    Ticks creation;
 
-    Command(TypeSet type, Ticks creation, Timer * timer) : type(type), creation(creation) , timer(timer) {
+    Command(TypeSet type, Timer * timer, Ticks creation) : type(type), timer(timer), creation(creation) {
     }
+
+    Command(TypeSet type, Timer * timer) : type(type), timer(timer), creation(getCurrentTicks()) {
+    }
+
+    
 };
 
 }

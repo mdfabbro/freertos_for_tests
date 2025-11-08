@@ -64,7 +64,7 @@ public:
 
     T* operator[] (size_t index) override {
         return at(index);
-    };
+    }
 
     bool push_back(T* element) override {
         if( length == Size ) {
@@ -74,6 +74,7 @@ public:
         list[(start + length - 1)%Size] = element;
         return true; 
     }
+
     bool push_front(T* element) override {
         if( length == Size ) {
             return false; // No more space
@@ -83,6 +84,7 @@ public:
         ++length;
         return true;
     }
+
     bool pop_back() override {
         if( !length ) {
             return false;
@@ -91,6 +93,7 @@ public:
         --length;
         return true;
     }
+
     bool pop_front() override {
         if( !length ) {
             return false;
@@ -101,7 +104,15 @@ public:
         return true;
     }
 
-    virtual bool erase(size_t index) {
+    void clear() override {
+        start = 0;
+        length = 0;
+        for(size_t i = 0; i < Size ; ++i ) {
+            list[i] = nullptr;
+        }
+    }
+
+    bool erase(size_t index) override {
         if(index >= length) { return false; }
         if(index == 0) { return pop_front(); }
         
@@ -114,12 +125,9 @@ public:
         --length;
         return true;
     }
-    virtual size_t size() {
-        return length;
-    }
-    virtual bool empty() {
-        return !length;
-    }
+    
+    inline size_t size() override { return length; }
+    inline bool empty() override { return !length; }
 
 private:
     T* list[Size] {nullptr};
@@ -153,6 +161,7 @@ public:
         ++length;
         return true; 
     }
+
     bool push_front(void* = nullptr) override {
         if( length == Size ) {
             return false; // No more space
@@ -160,6 +169,7 @@ public:
         ++length;
         return true;
     }
+
     bool pop_back() override {
         if( !length ) {
             return false;
@@ -167,6 +177,7 @@ public:
         --length;
         return true;
     }
+
     bool pop_front() override  {
         if( !length ) {
             return false;
@@ -175,19 +186,21 @@ public:
         return true;
     }
 
-    virtual bool erase(size_t index) {
+    inline void clear() override {
+        length = 0;
+    }
+
+    bool erase(size_t index) override {
         if(index >= length) {
             return false;
         }
         --length;
         return true;
     }
-    virtual size_t size() {
-        return length;
-    }
-    virtual bool empty() {
-        return !length;
-    };
+
+    inline size_t size() override { return length; }
+
+    inline bool empty() override { return !length; }
 
 private:
     size_t length { 0 };

@@ -71,7 +71,7 @@ set(FREERTOS_HOOKS ${UTILS_DIR}/FreeRTOS/FreeRTOSHooks.cpp)
 # Collect all .cpp files in the target directories
 file(GLOB_RECURSE PROJECT_SRC CONFIGURE_DEPENDS "src/*.cpp")
 file(GLOB_RECURSE TESTS_SRC CONFIGURE_DEPENDS "tests/*.cpp")
-file(GLOB_RECURSE CUSTOM_TIMERS_SRC CONFIGURE_DEPENDS "${UTILS_DIR}/Timers/Custom/*.cpp")
+file(GLOB_RECURSE CUSTOM_TIMERS_SRC CONFIGURE_DEPENDS "${UTILS_DIR}/Timers/*.cpp")
 
 
 # Create the final executable

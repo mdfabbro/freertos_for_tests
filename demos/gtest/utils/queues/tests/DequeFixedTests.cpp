@@ -594,3 +594,109 @@ TEST(DequeFixedVoidTest, ShouldAllowFullEraseCycle) {
 
     EXPECT_FALSE(deque.erase(0)); // nothing left to erase
 }
+
+TEST(DequeFixedTest, ClearShouldResetStateCompletely) {
+    DequeFixed<Item, 5> deque;
+
+    Item a(10), b(20), c(30);
+    deque.push_back(&a);
+    deque.push_back(&b);
+    deque.push_back(&c);
+
+    EXPECT_EQ(deque.size(), 3u);
+    EXPECT_FALSE(deque.empty());
+
+    deque.clear();
+
+    EXPECT_TRUE(deque.empty());
+    EXPECT_EQ(deque.size(), 0u);
+    EXPECT_EQ(deque.front(), nullptr);
+    EXPECT_EQ(deque.back(), nullptr);
+
+    // After clear, it should accept new pushes from scratch
+    EXPECT_TRUE(deque.push_back(&a));
+    EXPECT_EQ(deque.front()->value, 10);
+    EXPECT_EQ(deque.size(), 1u);
+}
+
+TEST(DequeFixedTest, PopShouldWorkAfterWrapAround) {
+    DequeFixed<Item, 5> deque;
+
+    Item a(1), b(2), c(3), d(4), e(5), f(6);
+    deque.push_back(&a);
+    deque.push_back(&b);
+    deque.push_back(&c);
+    deque.push_back(&d);
+    deque.push_back(&e);
+
+    // Force wrap-around
+    deque.pop_front(); // removes a
+    deque.pop_front(); // removes b
+
+    deque.push_back(&f); // triggers wrap-around
+
+    // Now remove all to ensure consistent state
+    EXPECT_TRUE(deque.pop_front());
+    EXPECT_TRUE(deque.pop_front());
+    EXPECT_TRUE(deque.pop_front());
+    EXPECT_TRUE(deque.pop_front());
+    EXPECT_TRUE(deque.empty());
+}
+
+TEST(DequeFixedTest, FrontAndBackShouldUpdateCorrectlyAfterMixedOperations) {
+    DequeFixed<Item, 6> deque;
+
+    Item a(1), b(2), c(3), d(4);
+
+    deque.push_back(&a);
+    deque.push_back(&b);
+    EXPECT_EQ(deque.front()->value, 1);
+    EXPECT_EQ(deque.back()->value, 2);
+
+    deque.push_front(&c);  // [c, a, b]
+    EXPECT_EQ(deque.front()->value, 3);
+    EXPECT_EQ(deque.back()->value, 2);
+
+    deque.pop_back();      // [c, a]
+    EXPECT_EQ(deque.back()->value, 1);
+
+    deque.push_back(&d);   // [c, a, d]
+    EXPECT_EQ(deque.front()->value, 3);
+    EXPECT_EQ(deque.back()->value, 4);
+}
+
+TEST(DequeFixedTest, EraseShouldNotCorruptOrderWhenRemovingSequentially) {
+    DequeFixed<Item, 8> deque;
+
+    Item a(1), b(2), c(3), d(4), e(5);
+    deque.push_back(&a);
+    deque.push_back(&b);
+    deque.push_back(&c);
+    deque.push_back(&d);
+    deque.push_back(&e);
+
+    EXPECT_TRUE(deque.erase(1)); // remove 'b'
+    EXPECT_TRUE(deque.erase(2)); // remove 'd'
+    EXPECT_EQ(deque.size(), 3u);
+
+    EXPECT_EQ(deque.at(0)->value, 1);
+    EXPECT_EQ(deque.at(1)->value, 3);
+    EXPECT_EQ(deque.at(2)->value, 5);
+}
+
+TEST(DequeFixedVoidTest, ClearShouldResetLength) {
+    DequeFixed<void, 4> deque;
+
+    for (int i = 0; i < 3; ++i)
+        EXPECT_TRUE(deque.push_back());
+
+    EXPECT_EQ(deque.size(), 3u);
+    deque.clear();
+    EXPECT_TRUE(deque.empty());
+    EXPECT_EQ(deque.size(), 0u);
+
+    // Should be reusable
+    EXPECT_TRUE(deque.push_back());
+    EXPECT_EQ(deque.size(), 1u);
+}
+

@@ -5,9 +5,11 @@ namespace Timers {
 
 using Ticks = unsigned int ;
 
-static volatile unsigned int currentTicks {0};
+void incrementCurrentTicks(Ticks toAdd);
+Ticks getCurrentTicks();
+void resetCurrentTicks();
 
-class  __attribute__((packed)) Timer {
+class Timer {
 public:
     using Callback = void (*)(Timer*);
 protected:
@@ -19,7 +21,19 @@ protected:
     bool enabled {false};
 
 public:
-    Timer( const char * timerName, Ticks period, Callback callback, bool autoReload );
+    Timer( const char * timerName, Ticks period, Callback callback, bool autoReload ) 
+        :   timerName(timerName),
+            period(period),
+            callback(callback),
+            autoReload(autoReload) {}
+
+    virtual ~Timer() = default;
+
+    Timer(const Timer&) = delete;
+    Timer& operator=(const Timer&) = delete;
+    Timer(Timer&&) = default;
+    Timer& operator=(Timer&&) = default;
+
 
     bool isEnabled() const {
         return enabled;

@@ -9,7 +9,7 @@ namespace SendCommand {
     bool Start( Timer * t );
     bool Reset( Timer * t );
     bool Stop( Timer * t );
-    bool Reload( Timer * t );
+    bool AutoReload( Timer * t );
     bool SingleShot( Timer * t );
 }
 

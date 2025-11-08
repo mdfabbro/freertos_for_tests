@@ -32,10 +32,10 @@ public:
     inline T* back() override { 
         return Deque::back();
     }
-    inline T* at(size_t index) {
+    inline T* at(size_t index) override {
         return Deque::at(index);
     } 
-    inline T* operator[](size_t index) {
+    inline T* operator[](size_t index) override {
         return Deque::at(index);
     } 
 
@@ -47,13 +47,17 @@ public:
         return Deque::pop_front();
     }
 
-    inline bool erase(size_t index) {
+    inline void clear() override {
+        Deque::clear();
+    }
+
+    inline bool erase(size_t index) override {
         return Deque::erase(index);
     } 
-    inline size_t size() {
+    inline size_t size() override {
         return Deque::size();
     } 
-    inline bool empty() {
+    inline bool empty() override {
         return Deque::empty();
     } 
 
@@ -89,10 +93,10 @@ public:
         return Deque::back();
     }
 
-    inline void* at(size_t index) {
+    inline void* at(size_t index) override {
         return Deque::at(index);
     } 
-    inline void* operator[](size_t index) {
+    inline void* operator[](size_t index) override {
         return Deque::at(index);
     } 
 
@@ -104,13 +108,17 @@ public:
         return Deque::pop_front();
     }
 
-    inline bool erase(size_t index) {
+    inline void clear() override {
+        Deque::clear();
+    }
+
+    inline bool erase(size_t index) override {
         return Deque::erase(index);
     } 
-    inline size_t size() {
+    inline size_t size() override {
         return Deque::size();
     } 
-    inline bool empty() {
+    inline bool empty() override {
         return Deque::empty();
     } 
 

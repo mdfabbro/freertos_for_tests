@@ -5,6 +5,8 @@
 #include "Command.h"
 #include "Lists.h"
 
+#include <iostream>
+
 namespace Timers{
 
 void TimerController() {
@@ -56,7 +58,7 @@ void TimerController() {
     Timer * timer = Running::GetList().at(index); 
     while(timer) {
         if(timer->isEnabled()) {
-            if(timer->nextExpiryTicks() >= currentTicks) {
+            if(timer->nextExpiryTicks() <= getCurrentTicks()) {
                 if(timer->callback) {
                     timer->callback(timer);
                 }

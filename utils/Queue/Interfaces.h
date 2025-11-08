@@ -26,10 +26,12 @@ struct IDeque {
     virtual bool pop_back() = 0 ;
     virtual bool pop_front() = 0 ;
 
+    virtual void clear() = 0;
+
     virtual bool erase(size_t index) = 0;
     virtual size_t size() = 0;
     virtual bool empty() = 0;
-    
+  
 };
 
 template<class T>
@@ -43,6 +45,8 @@ struct IQueue {
 
     virtual bool push(T*) = 0 ;
     virtual bool pop() = 0 ;
+
+    virtual void clear() = 0;
 
     virtual bool erase(size_t index) = 0;
     virtual size_t size() = 0;

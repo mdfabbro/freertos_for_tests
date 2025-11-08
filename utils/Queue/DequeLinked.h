@@ -8,9 +8,7 @@ class DequeLinked : public IDeque<T> {
 public:
 
     ~DequeLinked() {
-        while(start) {
-            pop_front();
-        }
+        clear();
     }
 
     DequeLinked() = default;
@@ -122,7 +120,13 @@ public:
         return true;
     }
 
-    virtual bool erase(size_t index) {
+    void clear() override {
+        while(start) {
+            pop_front();
+        }
+    }
+
+    bool erase(size_t index) override {
         Element* element = elementAt(index);
         if(element == nullptr) {
             return false;
@@ -142,7 +146,7 @@ public:
         delete element;
         return true;
     }
-    virtual size_t size() {
+    size_t size() override {
         // Just to save using the length but we pay with processing time...
         // TODO: Change to have length...
         size_t res {0};
@@ -151,7 +155,7 @@ public:
         }
         return res;
     }
-    virtual bool empty() {
+    bool empty() override {
         return start == nullptr;
     };
     
@@ -283,7 +287,13 @@ public:
         return true;
     }
 
-    virtual bool erase(size_t index) {
+    void clear() override {
+        while(start) {
+            pop_front();
+        }
+    }
+
+    bool erase(size_t index) override {
         ElementBasic* element = elementAt(index);
         if(element == nullptr) {
             return false;
@@ -303,7 +313,7 @@ public:
         delete element;
         return true;
     }
-    virtual size_t size() {
+    size_t size() override {
         // Just to save using the length but we pay with processing time...
         // TODO: Change to have length...
         size_t res {0};
@@ -312,7 +322,7 @@ public:
         }
         return res;
     }
-    virtual bool empty() {
+    bool empty() override {
         return start == nullptr;
     };
 
