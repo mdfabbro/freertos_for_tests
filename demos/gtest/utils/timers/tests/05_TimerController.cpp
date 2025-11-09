@@ -164,36 +164,4 @@ TEST_F(TimerControllerTest, ResetsProperly) {
     EXPECT_EQ(Timers::Running::GetList().size(),0); 
 }
 
-TEST_F(TimerControllerTest, ResetsProperly) {
-    Timers::TestTimer t1("T1", 100, false );
-    Timers::SendCommand::Start(&t1);
-
-    EXPECT_TRUE(Timers::Running::GetList().empty());
-    EXPECT_EQ(t1.callbackCount, 0); // And not called
-
-    Timers::TimerController();
-    EXPECT_EQ(Timers::Running::GetList().size(),1); 
-    
-    Timers::incrementCurrentTicks(50);
-    Timers::TimerController();
-    EXPECT_EQ(Timers::Running::GetList().size(),1); 
-    EXPECT_EQ(t1.callbackCount, 0); 
-
-    Timers::SendCommand::Reset(&t1);
-    
-    Timers::incrementCurrentTicks(50);
-    Timers::TimerController();
-    EXPECT_EQ(Timers::Running::GetList().size(),1); 
-    EXPECT_EQ(t1.callbackCount, 0); 
-    
-    Timers::incrementCurrentTicks(50);
-    Timers::TimerController();
-    EXPECT_EQ(Timers::Running::GetList().size(),0); 
-    EXPECT_EQ(t1.callbackCount, 1); 
-    
-    Timers::SendCommand::Stop(&t1);
-    Timers::TimerController();
-    EXPECT_EQ(Timers::Running::GetList().size(),0); 
-}
-
 // TODO: Tests where the Commands are sent when there timer overflowed
