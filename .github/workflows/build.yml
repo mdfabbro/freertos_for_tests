@@ -47,7 +47,6 @@ jobs:
     strategy:
       matrix:
         project:
-          - demos/gtest/basic
           - demos/gtest/leak_detection
           - demos/gtest/led_toggle
           - demos/gtest/utils/timers

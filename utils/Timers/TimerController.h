@@ -10,6 +10,15 @@
 namespace Timers{
 
 void TimerController() {
+    const auto listContains = [](QueueLinked<Timers::Timer> & list, Timer * t) -> bool {
+        for(size_t i = 0; i < list.size(); ++i) {
+            if(list[i] == t) {
+                return true;
+            }
+        }
+        return false;
+    };
+
     auto* command = EnqueuedCommands::GetList().front(); 
     while( command ) {
         auto * timer = command->timer;
@@ -19,26 +28,33 @@ void TimerController() {
             timer->nextExpiration = timer->period + command->creation;
             if(!timer->isEnabled()) {
                 timer->enabled = true;
-                Running::GetList().push(timer);
-            }   
+                if(!listContains(Running::GetList(), timer)) {
+                    Running::GetList().push(timer);
+                }
+            }
             break;
 
         case Command::TypeSet::RESET:
             if(timer->isEnabled()) {
-                if(timer->nextExpiryTicks() >= command->creation) {
+                if(timer->nextExpiryTicks() <= command->creation) {
                     if(timer->callback)
                         timer->callback(timer);
-                    if(!timer->autoReload) {
-                        timer->enabled = false;
-                    }
+                    // We don't care about the autoreload as it is a reset
+                }
+                timer->nextExpiration = timer->period + command->creation;
+            } else {
+                timer->nextExpiration = timer->period + command->creation;
+                timer->enabled = true;
+                if(!listContains(Running::GetList(), timer)) {
+                    Running::GetList().push(timer);
                 }
             }
-            timer->nextExpiration = timer->period + command->creation;
+    
             break;
 
         case Command::TypeSet::STOP:
             if(timer->isEnabled()) {
-                if(timer->nextExpiryTicks() >= command->creation) {
+                if(timer->nextExpiryTicks() <= command->creation) {
                     if(timer->callback)
                         timer->callback(timer);
                 }
