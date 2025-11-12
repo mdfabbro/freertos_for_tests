@@ -5,9 +5,11 @@ BlinkTask::BlinkTask(UBaseType_t priority, const char* name)
 }
 
 void BlinkTask::taskFunction() {
+    const TickType_t Periodms = pdMS_TO_TICKS( 100 );
+    TickType_t lastWakeTicks = xTaskGetTickCount();
     for (;;) {
         const auto ticks = (unsigned long)xTaskGetTickCount();
         printf("Blink! Total ticks: %lu\n", ticks);
-        vTaskDelay(pdMS_TO_TICKS(1000));
+        vTaskDelayUntil(&lastWakeTicks, pdMS_TO_TICKS(Periodms) );
     }
 }

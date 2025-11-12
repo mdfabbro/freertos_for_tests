@@ -18,3 +18,4 @@ Available demos include:
 8. **gtest/utils/timers:** We will create our own SW Timers and tests them.
 9. **http/server**: Minimal HTTP server running on a POSIX system with FreeRTOS tasks. Uses a ReaderTask to detect incoming clients and a ResponderTask to handle requests asynchronously, allowing testing of FreeRTOS-style scheduling and multi-client HTTP handling on a PC.
 10. **timers/led_pwm**: Demonstrates the use of a FreeRTOS software timer to implement a simple LED PWM. The timer adjusts the LED’s ON/OFF times based on the configured duty cycle (`pwm`) and total period (`period`).
+11. **isr/wakeup**: Demonstrates interrupt-driven task synchronization. A simulated ISR (using `std::thread`) triggers a BinarySemaphore that wakes a waiting task, illustrating deferred interrupt processing in FreeRTOS.
