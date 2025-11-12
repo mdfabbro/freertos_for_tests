@@ -15,6 +15,7 @@ jobs:
         project:
           - demos/blink
           - demos/http
+          - demos/isr/wake_up
           - demos/serial/basic
           - demos/serial/client_server
           - demos/timers/led_pwm
