@@ -217,41 +217,6 @@ TEST(DequeLinkedTest, LeakDetectionsNoLeakWhenEmpty) {
     EXPECT_EQ(pre, post);
 }
 
-TEST(DequeLinkedTest, VoidQueueBasic) {
-    DequeLinked<void> deque;
-
-    EXPECT_FALSE(deque.pop_front()); // Empty!
-
-    EXPECT_TRUE(deque.push_back());
-    EXPECT_TRUE(deque.push_back());
-    EXPECT_TRUE(deque.push_back());
-    EXPECT_TRUE(deque.push_back());
-    EXPECT_TRUE(deque.push_back());   
-
-    EXPECT_TRUE(deque.pop_front());
-    EXPECT_TRUE(deque.pop_front());
-    EXPECT_TRUE(deque.pop_front());
-    EXPECT_TRUE(deque.pop_front());
-    EXPECT_TRUE(deque.pop_front());
-    EXPECT_FALSE(deque.pop_front()); // Empty!
-
-    EXPECT_FALSE(deque.pop_back()); // Empty!
-
-    EXPECT_TRUE(deque.push_front());
-    EXPECT_TRUE(deque.push_front());
-    EXPECT_TRUE(deque.push_front());
-    EXPECT_TRUE(deque.push_front());
-    EXPECT_TRUE(deque.push_front());   
-
-    EXPECT_TRUE(deque.pop_back());
-    EXPECT_TRUE(deque.pop_back());
-    EXPECT_TRUE(deque.pop_back());
-    EXPECT_TRUE(deque.pop_back());
-    EXPECT_TRUE(deque.pop_back());
-    EXPECT_FALSE(deque.pop_back()); // Empty!
-
-}
-
 TEST(DequeLinkedTest, SizeAndEmptyShouldReflectContent) {
     DequeLinked<Item> deque;
     EXPECT_TRUE(deque.empty());
@@ -378,24 +343,4 @@ TEST(DequeLinkedTest, EraseShouldWorkAfterSeveralPushAndPopOperations) {
     EXPECT_EQ(deque.size(), 2u);
     EXPECT_EQ(deque.at(0)->value, 7);
     EXPECT_EQ(deque.at(1)->value, 9);
-}
-
-TEST(DequeLinkedTest, ShouldWorkCorrectlyWithVoidSpecialization) {
-    DequeLinked<void> deque;
-
-    EXPECT_TRUE(deque.empty());
-    EXPECT_EQ(deque.size(), 0u);
-
-    EXPECT_TRUE(deque.push_back());
-    EXPECT_TRUE(deque.push_front());
-    EXPECT_EQ(deque.size(), 2u);
-
-    EXPECT_TRUE(deque.erase(0));
-    EXPECT_EQ(deque.size(), 1u);
-
-    EXPECT_TRUE(deque.erase(0));
-    EXPECT_TRUE(deque.empty());
-    EXPECT_EQ(deque.size(), 0u);
-
-    EXPECT_FALSE(deque.erase(5)); // out of range
 }

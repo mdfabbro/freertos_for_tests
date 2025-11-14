@@ -46,6 +46,10 @@ public:
         return DequeFixed<T, Size>::pop_front();
     }
 
+    inline bool insert(size_t index, T* element) override {
+        return DequeFixed<T, Size>::insert(index, element);
+    }
+
     inline void clear() override {
         DequeFixed<T, Size>::clear();
     }
@@ -103,6 +107,10 @@ public:
 
     inline bool pop() override { 
         return DequeFixed<void, Size>::pop_front();
+    }
+
+    inline bool insert(size_t index, void* element = nullptr) override {
+        return DequeFixed<void, Size>::insert(index, element);
     }
 
     inline void clear() override {

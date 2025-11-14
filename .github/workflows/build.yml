@@ -50,6 +50,7 @@ jobs:
         project:
           - demos/gtest/leak_detection
           - demos/gtest/led_toggle
+          - demos/gtest/priority_messages
           - demos/gtest/utils/timers
           - demos/gtest/utils/queues
 

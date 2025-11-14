@@ -162,23 +162,3 @@ TEST(QueueLinkedTest, LeakDetectionsNoLeakWhenEmpty) {
     EXPECT_EQ(pre, post);
 }
 
-// --- Void specialization ---
-
-TEST(QueueLinkedTest, VoidQueueBasic) {
-    QueueLinked<void> queue;
-
-    EXPECT_FALSE(queue.pop()); // Empty
-
-    EXPECT_TRUE(queue.push());
-    EXPECT_TRUE(queue.push());
-    EXPECT_TRUE(queue.push());
-    EXPECT_TRUE(queue.push());
-    EXPECT_TRUE(queue.push());
-
-    EXPECT_TRUE(queue.pop());
-    EXPECT_TRUE(queue.pop());
-    EXPECT_TRUE(queue.pop());
-    EXPECT_TRUE(queue.pop());
-    EXPECT_TRUE(queue.pop());
-    EXPECT_FALSE(queue.pop()); // Empty again
-}

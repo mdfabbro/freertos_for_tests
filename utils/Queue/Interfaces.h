@@ -25,7 +25,8 @@ struct IDeque {
     virtual bool push_front(T*) = 0 ;
     virtual bool pop_back() = 0 ;
     virtual bool pop_front() = 0 ;
-
+    virtual bool insert(size_t index, T*) = 0 ;
+    
     virtual void clear() = 0;
 
     virtual bool erase(size_t index) = 0;
@@ -45,6 +46,7 @@ struct IQueue {
 
     virtual bool push(T*) = 0 ;
     virtual bool pop() = 0 ;
+    virtual bool insert(size_t index, T*) = 0 ;
 
     virtual void clear() = 0;
 

@@ -1,349 +1,148 @@
-#ifndef __QUEUE_DEQUE_LINKED_H__
-#define __QUEUE_DEQUE_LINKED_H__
+#ifndef __QUEUE_DEQUE_LINKED_LENGTH_H__
+#define __QUEUE_DEQUE_LINKED_LENGTH_H__
 
 #include "Interfaces.h"
+#include <iostream>
 
-template <typename T>
-class DequeLinked : public IDeque<T> { 
-public:
-
-    ~DequeLinked() {
-        clear();
-    }
-
-    DequeLinked() = default;
-    
-    DequeLinked(const DequeLinked & ) = delete;
-    DequeLinked& operator=(const DequeLinked & ) = delete;
-
-    DequeLinked( DequeLinked && toMove) {
-        this->start = toMove.start;
-        this->end = toMove.end;
-        toMove.start = toMove.end = nullptr;
-    }
-
-    DequeLinked& operator=( DequeLinked && toMove) {
-        if(this != &toMove) {
-            this->start = toMove.start;
-            this->end = toMove.end;
-            toMove.start = toMove.end = nullptr;
-        }
-        return *this;
-    }
-
-    T* front() override { 
-        if( !start ) {
-            return nullptr;
-        }
-        return start->value;
-    }
-    T* back() override {
-        if( !end ) {
-            return nullptr;
-        }
-        return end->value;
-    }
-
-    T* at(size_t index) override {
-        Element * element = elementAt(index);
-        return element ? element->value : nullptr;
-    }
-
-    T* operator[](size_t index) override {
-        return at(index);
-    }
-
-    bool push_back(T* element) override {
-        if( !end ) {
-            end = new Element{element};
-            if(!end) {
-                return false;
-            }
-            start = end;
-        } else {
-            auto* toPush = new Element{element};
-            if(!toPush) {
-                return false;
-            }
-            end->next = toPush;
-            toPush->prev = end;
-            end = toPush;
-        }
-        return true;
-    }
-    bool push_front(T* element) override {
-        if( !start ) {
-            start = new Element{element};
-            if(!start) {
-                return false;
-            }
-            end = start;
-        } else {
-            auto* toPush = new Element{element};
-            if(!toPush) {
-                return false;
-            }
-            start->prev = toPush;
-            toPush->next = start;
-            start = toPush;
-        }
-        return true;
-    }
-    bool pop_back() override {
-        if( !end ) {
-            return false;
-        }
-        auto * toRemove = end;
-        if(!end->prev) {
-            // It is the only element
-            end = start = nullptr;
-        } else {
-            end->prev->next = nullptr;
-            end = end->prev;
-        }
-        delete toRemove;
-        return true;
-    }
-    bool pop_front() override  {
-        if( !start ) {
-            return false;
-        }
-        auto * toRemove = start;
-        if(!start->next) {
-            // It is the only element
-            end = start = nullptr;
-        } else {
-            start->next->prev = nullptr;
-            start = start->next;
-        }
-        delete toRemove;
-        return true;
-    }
-
-    void clear() override {
-        while(start) {
-            pop_front();
-        }
-    }
-
-    bool erase(size_t index) override {
-        Element* element = elementAt(index);
-        if(element == nullptr) {
-            return false;
-        }
-        if(element->next) {
-            element->next->prev = element->prev;
-        } else {
-            // We are deleting end...
-            end = element->prev;
-        }
-        if(element->prev) {
-            element->prev->next = element->next;
-        } else {
-            // We are deleting the start...
-            start = element->next;
-        }
-        delete element;
-        return true;
-    }
-    size_t size() override {
-        // Just to save using the length but we pay with processing time...
-        // TODO: Change to have length...
-        size_t res {0};
-        for(Element* current = start; current != nullptr ; current = current->next) {
-            ++res;
-        }
-        return res;
-    }
-    bool empty() override {
-        return start == nullptr;
-    };
-    
-
+template<class T>
+class DequeLinked : public IDeque<T> {
 private:
     struct Element {
-        
-        Element* next {nullptr};
-        Element* prev {nullptr};
-        T* value {nullptr};
-
-        Element(T* value) : value(value) {}
+        T* value;
+        Element *next {nullptr};
+        Element *prev {nullptr};
+        explicit Element(T* value) : value(value) {}
     };
 
-    Element* start {nullptr};
-    Element* end {nullptr};
+    Element *head {nullptr};
+    Element *tail {nullptr};
+    size_t length {0};
 
-    Element* elementAt(size_t index) {
-        size_t i {0};
-        for( Element *current = start; current != nullptr ; current = current->next ) {
-            if(i == index) {
-                return current;
-            }
-            ++i;
+    Element * getElementAt(size_t index) {
+        if( index >= length ) {
+            return nullptr;
         }
-        return nullptr;
+        Element * toReturn {nullptr};
+        if( index <= ((length-1)/2) ) {
+            toReturn = head;
+            for( size_t i = 0; i < index ; ++i ) {
+                toReturn = toReturn->next;
+            }
+        } else {
+            toReturn = tail;
+            for( size_t i = (length-1); i > index ; --i ) {
+                toReturn = toReturn->prev;
+            }
+        }
+        return toReturn;
     }
 
-};
-
-template<>
-class DequeLinked<void> : public IDeque<void> { 
 public:
 
-    ~DequeLinked() {
-        while(start) {
-            pop_front();
+    DequeLinked() {}
+
+    DequeLinked(DequeLinked && other) : head (other.head) , tail(other.tail) , length(other.length) {
+        other.head = nullptr;
+        other.tail = nullptr;
+        other.length = 0;
+    }
+
+    DequeLinked& operator=(DequeLinked && other) {
+        if(this == &other) {
+            return *this;
         }
-    }
-
-    DequeLinked() = default;
-    
-    DequeLinked(const DequeLinked & ) = delete;
-    DequeLinked& operator=(const DequeLinked & ) = delete;
-
-    DequeLinked( DequeLinked && toMove) {
-        this->start = toMove.start;
-        this->end = toMove.end;
-        toMove.start = toMove.end = nullptr;
-    }
-
-    DequeLinked& operator=( DequeLinked && toMove) {
-        this->start = toMove.start;
-        this->end = toMove.end;
-        toMove.start = toMove.end = nullptr;
+        head  = other.head ;
+        tail = other.tail; 
+        length = other.length;
+        other.head = nullptr;
+        other.tail = nullptr;
+        other.length = 0;
         return *this;
     }
 
-    void* front() override { return nullptr; }
-    void* back() override { return nullptr; }
-    void* at(size_t ) override { return nullptr; }
-    void* operator[](size_t ) override { return nullptr; }
+    DequeLinked(const DequeLinked & ) = delete;
+    DequeLinked& operator=(const DequeLinked &) = delete;
 
-    bool push_back(void* = nullptr) override {
-        if( !end ) {
-            end = new ElementBasic{};
-            if(!end) {
-                return false;
-            }
-            start = end;
-        } else {
-            auto* toPush = new ElementBasic{};
-            if(!toPush) {
-                return false;
-            }
-            end->next = toPush;
-            toPush->prev = end;
-            end = toPush;
-        }
-        return true;
+    ~DequeLinked() { clear(); }
+
+    T* front() override { return head ? head->value : nullptr ; }
+
+    T* back() override  { return tail ? tail->value : nullptr ; }
+
+    T* at(size_t index) override { 
+        auto * toReturn = getElementAt(index);
+        return toReturn ? toReturn->value : nullptr; 
     }
-    bool push_front(void* = nullptr) override {
-        if( !start ) {
-            start = new ElementBasic{};
-            if(!start) {
-                return false;
+
+    T* operator[](size_t index) override { return at(index); }
+
+    bool push_back(T* value) override { return insert( length, value ); }
+
+    bool push_front(T* value) override  { return insert( 0, value ); }
+    
+    bool insert(size_t index, T* value) override {
+        if( index > length ) { return false; } // Non-valid index
+        Element * toInsert = new Element( value );
+        if( index == length ) {
+            if( tail ) {
+                tail->next = toInsert;
+                toInsert->prev = tail;
             }
-            end = start;
+            tail = toInsert;
         } else {
-            auto* toPush = new ElementBasic{};
-            if(!toPush) {
-                return false;
+            auto * next = getElementAt(index);
+            auto* prev = next->prev;
+
+            if( prev ) {
+                prev->next = toInsert;
+                toInsert->prev = prev;
+                next->prev = toInsert;
             }
-            start->prev = toPush;
-            toPush->next = start;
-            start = toPush;
+            toInsert->next = next;
         }
-        return true;
-    }
-    bool pop_back() override {
-        if( !end ) {
-            return false;
+        if(index == 0) {
+            head = toInsert;
         }
-        auto * toRemove = end;
-        if(!end->prev) {
-            // It is the only element
-            end = start = nullptr;
-        } else {
-            end->prev->next = nullptr;
-            end = end->prev;
-        }
-        delete toRemove;
+        ++length;
         return true;
     }
 
-    bool pop_front() override  {
-        if( !start ) {
-            return false;
-        }
-        auto * toRemove = start;
-        if(!start->next) {
-            // It is the only element
-            end = start = nullptr;
-        } else {
-            start->next->prev = nullptr;
-            start = start->next;
-        }
-        delete toRemove;
-        return true;
-    }
+    bool pop_back() override  { return empty() ? false : erase( length -1 ) ; }
 
-    void clear() override {
-        while(start) {
-            pop_front();
-        }
-    }
+    bool pop_front() override { return empty() ? false : erase( 0 ); } 
+
+    void clear() override { while( !empty() ) { erase(0); } } 
 
     bool erase(size_t index) override {
-        ElementBasic* element = elementAt(index);
-        if(element == nullptr) {
-            return false;
-        }
-        if(element->next) {
-            element->next->prev = element->prev;
+        Element * toErase = getElementAt(index);
+        if(!toErase) { return false; }
+        if( index == 0 ) {
+            Element * next = toErase->next;
+            if(next) {
+                next->prev = nullptr;
+            } else { // It is the only element
+                tail = nullptr;
+            }
+            head = next;
+        } else if ( toErase == tail ) {
+            Element * prev = toErase->prev;
+            prev->next = nullptr;
+            tail = prev;
         } else {
-            // We are deleting end...
-            end = element->prev;
+            Element * prev = toErase->prev;
+            Element * next = toErase->next;
+            prev->next = next;
+            next->prev = prev;
         }
-        if(element->prev) {
-            element->prev->next = element->next;
-        } else {
-            // We are deleting the start...
-            start = element->next;
-        }
-        delete element;
+        toErase->next = toErase->prev = nullptr; // not needed
+        delete toErase;
+        --length;
         return true;
     }
-    size_t size() override {
-        // Just to save using the length but we pay with processing time...
-        // TODO: Change to have length...
-        size_t res {0};
-        for(ElementBasic* current = start; current != nullptr ; current = current->next) {
-            ++res;
-        }
-        return res;
-    }
-    bool empty() override {
-        return start == nullptr;
-    };
 
-private:
-    struct ElementBasic {
-        ElementBasic* next {nullptr};
-        ElementBasic* prev {nullptr};
-    };
-    ElementBasic* start {nullptr};
-    ElementBasic* end {nullptr};
+    inline size_t size() override { return length; };
 
-    ElementBasic* elementAt(size_t index) {
-        size_t i {0};
-        for( ElementBasic *current = start; current != nullptr ; current = current->next ) {
-            if(i == index) {
-                return current;
-            }
-            ++i;
-        }
-        return nullptr;
-    }
+    inline bool empty() override { return !length; };
 
 };
 

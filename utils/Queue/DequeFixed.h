@@ -22,9 +22,9 @@ public:
     DequeFixed( DequeFixed && toMove) {
         this->start = toMove.start;
         this->length = toMove.length;
-        for(size_t i = toMove.start; i != toMove.length ; ++i) {
-            this->list[i%Size] = toMove.list[i%Size];
-            toMove.list[i%Size] = nullptr; // not really needed
+        for(size_t i = 0; i != toMove.length ; ++i) {
+            this->accessList(i) = toMove.accessList(i);
+            toMove.accessList(i) = nullptr;
         }
         toMove.start = toMove.length = 0;
     }
@@ -33,9 +33,9 @@ public:
         if( this != &toMove ) {
             this->start = toMove.start;
             this->length = toMove.length;
-            for(size_t i = toMove.start; i != toMove.length ; ++i) {
-                this->list[i%Size] = toMove.list[i%Size];
-                toMove.list[i%Size] = nullptr; // not really needed
+            for(size_t i = 0; i != toMove.length ; ++i) {
+                this->accessList(i) = toMove.accessList(i);
+                toMove.accessList(i) = nullptr; 
             }
             toMove.start = toMove.length = 0;
         }
@@ -46,20 +46,20 @@ public:
         if( !length ) {
             return nullptr;
         }
-        return list[start];
+        return accessList(0);
     }
     T* back() override {
         if( !length ) {
             return nullptr;
         }
-        return list[(start + length - 1)%Size];
+        return accessList(length - 1);
     }
 
     T* at(size_t index) override {
         if(index >= length) {
             return nullptr;
         }
-        return list[(start + index)%Size];
+        return accessList(index);
     }
 
     T* operator[] (size_t index) override {
@@ -71,7 +71,7 @@ public:
             return false; // No more space
         }
         ++length;
-        list[(start + length - 1)%Size] = element;
+        accessList(length - 1) = element;
         return true; 
     }
 
@@ -80,7 +80,7 @@ public:
             return false; // No more space
         }
         start = start ? (start - 1) : (Size - 1);
-        list[start] = element;
+        accessList(0) = element;
         ++length;
         return true;
     }
@@ -89,8 +89,8 @@ public:
         if( !length ) {
             return false;
         }
-        list[(start + length)%Size] = nullptr; // Optional
         --length;
+        accessList(length) = nullptr;
         return true;
     }
 
@@ -98,18 +98,31 @@ public:
         if( !length ) {
             return false;
         }
-        list[start] = nullptr; // Optional
+        accessList(0) = nullptr; // Optional
         start = (start + 1) % Size;
         --length;
         return true;
     }
+    
+    bool insert(size_t index, T* toInsert) override {
+        if( length == Size )  { return false; }  // No more space!
+        if( index > size() )  { return false; }  // Index out of range
+        if( index == 0 ) { return push_front(toInsert); }
+
+        for( size_t i = index ; i < (length - 1) ; ++i ) {
+            accessList( i + 1 ) = accessList( i );
+        }
+        accessList( index ) = toInsert;
+        ++length;
+        return true;
+    }
 
     void clear() override {
+        for( size_t i = 0; i < length; ++i ) {
+            accessList( i ) = nullptr;
+        }
         start = 0;
         length = 0;
-        for(size_t i = 0; i < Size ; ++i ) {
-            list[i] = nullptr;
-        }
     }
 
     bool erase(size_t index) override {
@@ -119,9 +132,9 @@ public:
         // This can be two memcpy:
         const size_t toMove = length - 1 - index;
         for(size_t moved = 0; moved < toMove ; ++moved) {
-            list[(start + index + moved)%Size] = list[(start + index + moved + 1)%Size];
+            accessList(index + moved) = accessList(index + moved + 1) ;
         }
-        list[(start + index + toMove)%Size] = nullptr;
+        accessList(index + toMove) = nullptr;
         --length;
         return true;
     }
@@ -130,6 +143,10 @@ public:
     inline bool empty() override { return !length; }
 
 private:
+    inline T*& accessList(size_t i) {
+        return list[(start + i)%Size];
+    }
+
     T* list[Size] {nullptr};
     size_t start{ 0 };
     size_t length { 0 };
@@ -154,7 +171,7 @@ public:
     void* at(size_t ) override { return nullptr; }
     void* operator[](size_t ) override { return nullptr; }
 
-    bool push_back(void*  = nullptr) override {
+    bool push_back(void* = nullptr) override {
         if( length == Size ) {
             return false; // No more space
         }
@@ -184,6 +201,10 @@ public:
         }
         --length;
         return true;
+    }
+
+    bool insert(size_t, void*  = nullptr ) override {
+        return push_front();
     }
 
     inline void clear() override {

@@ -52,6 +52,10 @@ public:
         return Deque::pop_front();
     }
 
+    inline bool insert(size_t index, T* element = nullptr) override {
+        return Deque::insert(index, element);
+    }
+
     void clear() override {
         Deque::clear();
     }
