@@ -1,9 +1,13 @@
 # freertos_for_tests
 
-The goal of this repository is to provide FreeRTOS demos running on POSIX, which can be easily integrated into CI/CD pipelines.
+This repository provides FreeRTOS demos running on POSIX, designed to be easily integrated into CI/CD pipelines.
 
-Since we are using FreeRTOS-Cpp, some examples rely on *standard C++ libraries* in portions of code that would normally run only
-on the microcontroller. If these libraries are not available, the code can be easily adapted to remove the dependency.
+It includes both simple examples and more complex integration scenarios, such as compiling a client and a server that 
+communicate with each other.
+
+Many examples rely on C++ wrappers around FreeRTOS and use standard C++ libraries to simulate behavior that would normally run
+on a microcontroller. These dependencies exist only for simulation and testing purposes and can be removed when targeting real 
+embedded platforms.
 
 ## Demos
 
