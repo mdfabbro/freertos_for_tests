@@ -15,6 +15,7 @@ jobs:
         project:
           - demos/blink
           - demos/http
+          - demos/isr/task_notify
           - demos/isr/wake_up
           - demos/serial/basic
           - demos/serial/client_server
@@ -51,8 +52,9 @@ jobs:
           - demos/gtest/leak_detection
           - demos/gtest/led_toggle
           - demos/gtest/priority_messages
-          - demos/gtest/utils/timers
           - demos/gtest/utils/queues
+          - demos/gtest/utils/strings
+          - demos/gtest/utils/timers
 
     steps:
       - name: Checkout repository

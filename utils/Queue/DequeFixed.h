@@ -16,10 +16,9 @@ public:
 
     DequeFixed() = default;
     
-    DequeFixed(const DequeFixed & ) = delete;
+    explicit DequeFixed(const DequeFixed & ) = delete;
     DequeFixed& operator=(const DequeFixed & ) = delete;
-
-    DequeFixed( DequeFixed && toMove) {
+    explicit DequeFixed( DequeFixed && toMove) {
         this->start = toMove.start;
         this->length = toMove.length;
         for(size_t i = 0; i != toMove.length ; ++i) {
@@ -28,7 +27,6 @@ public:
         }
         toMove.start = toMove.length = 0;
     }
-
     DequeFixed& operator=( DequeFixed && toMove) {
         if( this != &toMove ) {
             this->start = toMove.start;
@@ -128,13 +126,11 @@ public:
     bool erase(size_t index) override {
         if(index >= length) { return false; }
         if(index == 0) { return pop_front(); }
-        
         // This can be two memcpy:
-        const size_t toMove = length - 1 - index;
-        for(size_t moved = 0; moved < toMove ; ++moved) {
-            accessList(index + moved) = accessList(index + moved + 1) ;
+        for(size_t i = index; i < (length - 1) ; ++i) {
+            accessList(i) = accessList(i + 1) ;
         }
-        accessList(index + toMove) = nullptr;
+        accessList(length-1) = nullptr;
         --length;
         return true;
     }

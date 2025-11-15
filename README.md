@@ -21,11 +21,14 @@ under FreeRTOS task scheduling.
 7. **gtest/priority_messages**: Unit tests that validate the legacy message–priority protocol, ensuring compatibility when ordering 
 messages by emergency status, origin, destination, and message ID.
 8. **gtest/utils/queues:** Some tests for the different types of queues available in `utils`.
-9. **gtest/utils/timers:** We will create our own SW Timers and tests them.
-10. **http/server**: Minimal HTTP server running on a POSIX system with FreeRTOS tasks. Uses a ReaderTask to detect incoming clients
+9. **gtest/utils/strings:** Some tests for the `string` class available in `utils`.
+10. **gtest/utils/timers:** We will create our own SW Timers and tests them.
+11. **http/server**: Minimal HTTP server running on a POSIX system with FreeRTOS tasks. Uses a ReaderTask to detect incoming clients
 and a ResponderTask to handle requests asynchronously, allowing testing of FreeRTOS-style scheduling and multi-client HTTP handling 
 on a PC.
-11. **timers/led_pwm**: Demonstrates the use of a FreeRTOS software timer to implement a simple LED PWM. The timer adjusts the 
+12. **timers/led_pwm**: Demonstrates the use of a FreeRTOS software timer to implement a simple LED PWM. The timer adjusts the 
 LED’s ON/OFF times based on the configured duty cycle (`pwm`) and total period (`period`).
-12. **isr/wakeup**: Demonstrates interrupt-driven task synchronization. A simulated ISR (using `std::thread`) triggers a 
+13. **isr/task_notify**: Simulates an ADC interrupt feeding a circular buffer, with a deferred task notifying a filter task to 
+apply a moving average.
+14. **isr/wakeup**: Demonstrates interrupt-driven task synchronization. A simulated ISR (using `std::thread`) triggers a 
 BinarySemaphore that wakes a waiting task, illustrating deferred interrupt processing in FreeRTOS.

@@ -8,6 +8,7 @@
 class ISRCaller : public FreeRTOScpp::TaskClass {
 private:
     static constexpr int InterruptID {3};
+    static constexpr auto DelayMs = pdMS_TO_TICKS( 1 );
 public:
     ISRCaller()
     : TaskClass("ISRCaller", TaskPrio_High, 128) {
@@ -16,13 +17,15 @@ public:
     ~ISRCaller() = default;
 
     void task() override {
-        constexpr auto DelayMs = pdMS_TO_TICKS(1000);
+        delay(pdMS_TO_TICKS( 2 )); // initial delay to make sure everything else is up!
+        TickType_t prev = xTaskGetTickCount() ;
         for (;;) {
             spin();
-            TaskBase::delay(DelayMs);
+            delayUntil(prev, DelayMs);
         }
     }
     void spin() {
+        // Generating a SW interruption
         vPortGenerateSimulatedInterrupt( InterruptID );
     }
 };

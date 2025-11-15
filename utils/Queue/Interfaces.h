@@ -32,7 +32,6 @@ struct IDeque {
     virtual bool erase(size_t index) = 0;
     virtual size_t size() = 0;
     virtual bool empty() = 0;
-  
 };
 
 template<class T>
@@ -55,5 +54,49 @@ struct IQueue {
     virtual bool empty() = 0;
 };
 
+
+template<class T>
+struct IVector {
+    virtual ~IVector() noexcept {};
+
+    virtual T* front() = 0 ;
+    virtual T* back() = 0 ;
+    virtual T* data() = 0;
+    virtual T* at(size_t index) = 0;
+    virtual T* operator[](size_t index) = 0;
+
+    virtual bool push_back(const T&) = 0 ;
+    virtual bool pop_back() = 0 ;
+    virtual bool insert(size_t index, const T&) = 0 ;
+    
+    virtual void clear() = 0;
+
+    virtual bool erase(size_t index) = 0;
+    virtual size_t size() = 0;
+    virtual bool empty() = 0;
+  
+};
+
+template<class T>
+struct ICircularBuffer {
+    virtual ~ICircularBuffer() noexcept {};
+
+    virtual T* front() = 0 ;
+    virtual T* back() = 0 ;
+    virtual T* at(size_t index) = 0;
+    virtual T* operator[](size_t index) = 0;
+
+    virtual bool push_back(const T&) = 0 ;
+    virtual bool pop_front() = 0 ;
+    virtual bool insert(size_t index, const T&) = 0 ;
+    
+    virtual void clear() = 0;
+
+    virtual bool erase(size_t index) = 0;
+    virtual bool erase(size_t from, size_t to) = 0;
+    virtual size_t size() = 0;
+    virtual bool empty() = 0;
+  
+};
 
 #endif

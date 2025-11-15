@@ -41,7 +41,7 @@ public:
 
     DequeLinked() {}
 
-    DequeLinked(DequeLinked && other) : head (other.head) , tail(other.tail) , length(other.length) {
+    explicit DequeLinked(DequeLinked && other) : head (other.head) , tail(other.tail) , length(other.length) {
         other.head = nullptr;
         other.tail = nullptr;
         other.length = 0;
@@ -60,7 +60,7 @@ public:
         return *this;
     }
 
-    DequeLinked(const DequeLinked & ) = delete;
+    explicit DequeLinked(const DequeLinked & ) = delete;
     DequeLinked& operator=(const DequeLinked &) = delete;
 
     ~DequeLinked() { clear(); }

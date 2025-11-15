@@ -30,18 +30,17 @@ TEST(PriorityCircularBufferTest, InsertShouldPlaceHighestFirstAfterReorder) {
 
     Item a(10), b(30), c(20);
 
-    buffer.insert(&a); // reorder = true por defecto
+    buffer.insert(&a);
     buffer.insert(&b);
     buffer.insert(&c);
 
-    // Verificar que el orden es descendente
     ASSERT_NE(buffer.front(), nullptr);
     EXPECT_EQ(buffer.front()->value, 30); // b
 
     EXPECT_EQ(buffer[1]->value, 20); // c
     EXPECT_EQ(buffer.back()->value, 10); // a
 
-    buffer.pop(); // quitar 30
+    buffer.pop(); 
     ASSERT_NE(buffer.front(), nullptr);
     EXPECT_EQ(buffer.front()->value, 20); // c
 }
